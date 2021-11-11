@@ -1,10 +1,6 @@
 const mongoCollections = require('../config/mongoCollections');
 const users = mongoCollections.users;
 let { ObjectId } = require('mongodb');
-// TODO collapse bank provider and then compare email
-// ----------VARIABLES----------
-let MIN_ADULT_AGE = 18;
-let MAX_ADULT_AGE = 100
 // ----------TYPE CHECKING----------
 function isString(str, varName) {
     if (!str) throw `${varName} must be provided`
@@ -14,12 +10,12 @@ function isString(str, varName) {
 function isAdult(num) {
     if (!num && num != 0) throw `${varName} must be provided`
     if (typeof num != 'number') throw `${varName} must be a number`
-    if (num < MIN_ADULT_AGE || num > MAX_ADULT_AGE) throw  `${varName} must be a number between ${MIN_ADULT_AGE} and ${MAX_ADULT_AGE}`
+    // if (num < MIN_ADULT_AGE || num > MAX_ADULT_AGE) throw  `${varName} must be a number between ${MIN_ADULT_AGE} and ${MAX_ADULT_AGE}`
 }
 // ----------ERROR HANDLING----------
 function isEmail(bank, email) {
-    if (email.trim() != email.trim().replace(/\s+/g, '')) throw `Email cannot have extra spaces in between`;
-    if (email.trim().split("@")[1].toLowerCase() != `${bank.trim().toLowerCase()}.com`) throw `Email domain is not the same as the bank provider`;
+    if (email.toLowerCase().trim() != email.toLowerCase().trim().replace(/\s+/g, '')) throw `Email cannot have extra spaces in between`;
+    if (email.trim().split("@")[1].toLowerCase() != `${bank.toLowerCase().replace(/\s/g,'')}.com`) throw `Email domain is not the same as the bank provider`;
    
     if (/([a-zA-Z0-9]+)([\_\.\-{1}])?([a-zA-Z0-9]+)\@([a-zA-Z0-9]+)([\.])com/.test(email.trim()) == false) throw `You must provide a valid email address
     • Starts with an alphanumeric character
@@ -60,6 +56,15 @@ async function createUser(firstName, lastName, bank, email, password, age) {
     const user = await this.getUserById(newId);
     user._id = user._id.toString();
 
+    let userUpdateInfo = {
+        userId: user._id
+    };
+    const updateInfo = await userCollection.updateOne(
+        { _id: ObjectId(user._id)},
+        { $set: userUpdateInfo}
+    );
+    if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw `Failed to update user`;
+
     return user;
 };
 async function getAllUsers() {
@@ -68,7 +73,7 @@ async function getAllUsers() {
     const userList = await userCollection.find({}).toArray();
     
     if(!userList) throw `No users in the system`
-    for (let i = 0; i < userList.length; i++) {
+    for (let i in userList) {
         userList[i]._id = userList[i]._id.toString(); 
     }
     return userList;

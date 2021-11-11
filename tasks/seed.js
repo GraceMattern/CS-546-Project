@@ -17,7 +17,7 @@ async function main() {
     const alice = await users.createUser('Alice', 'Cooper', 'Chase', 'acooper@chase.com', 'root', 20);
     const aliceId = alice._id;
 
-    const sally = await users.createUser('Sally', 'Winters', 'Citi', 'gmattern@citi.com', 'acb123', 26);
+    const sally = await users.createUser('Sally', 'Winters', 'Bank of America', 'swinters@bankofamerica.com', 'acb123', 26);
     const sallyId = sally._id;
 
     console.log('Done seeding database');

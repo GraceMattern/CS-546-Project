@@ -18,8 +18,8 @@ function isAdult(num) {
 }
 // ----------ERROR HANDLING----------
 function isEmail(bank, email) {
-    if (email.trim() != email.trim().replace(/\s+/g, '')) throw `Email cannot have extra spaces in between`;
-    if (email.trim().split("@")[1].toLowerCase() != `${bank.trim().toLowerCase()}.com`) throw `Email domain is not the same as the bank provider`;
+    if (email.toLowerCase().trim() != email.toLowerCase().trim().replace(/\s+/g, '')) throw `Email cannot have extra spaces in between`;
+    if (email.trim().split("@")[1].toLowerCase() != `${bank.toLowerCase().replace(/\s/g,'')}.com`) throw `Email domain is not the same as the bank provider`;
    
     if (/([a-zA-Z0-9]+)([\_\.\-{1}])?([a-zA-Z0-9]+)\@([a-zA-Z0-9]+)([\.])com/.test(email.trim()) == false) throw `You must provide a valid email address
     • Starts with an alphanumeric character
