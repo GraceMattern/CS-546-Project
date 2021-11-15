@@ -1,0 +1,25 @@
+{
+  "name": "cs-546-project",
+  "version": "1.0.0",
+  "description": "CS 546 B Final Project: E-Banking",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "seed": "node ./tasks/seed.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GraceMattern/CS-546-Project.git"
+  },
+  "author": "Team 6: Cheng Chen, Maor Mashiach, Grace Mattern, Pratik Patil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GraceMattern/CS-546-Project/issues"
+  },
+  "homepage": "https://github.com/GraceMattern/CS-546-Project#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^4.1.4"
+  }
+}
