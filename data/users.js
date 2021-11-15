@@ -73,8 +73,8 @@ async function getAllUsers() {
     const userList = await userCollection.find({}).toArray();
     
     if(!userList) throw `No users in the system`
-    for (let i in userList) {
-        userList[i]._id = userList[i]._id.toString(); 
+    for (let i of userList) {
+        i._id = i._id.toString(); 
     }
     return userList;
 };
