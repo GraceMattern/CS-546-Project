@@ -2,6 +2,7 @@ const dbConnection = require('../config/mongoConnection');
 const data = require('../data/');
 /* add data files here */
 const users = data.users;
+const transactions = data.transactions;
 
 async function main() {
     const db = await dbConnection.connectToDb();
@@ -20,8 +21,7 @@ async function main() {
     const sally = await users.createUser('Sally', 'Winters', 'Bank of America', 'swinters@bankofamerica.com', 'acb123', 26);
     const sallyId = sally._id;
 
-    console.log('Done seeding database');
-
+	console.log('Done seeding database');
     await dbConnection.closeConnection();
 
 }
