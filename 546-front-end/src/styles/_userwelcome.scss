@@ -1,0 +1,15 @@
+.sidebar{
+    width: 40vw;
+    height: 100vh;
+    background-color: grey;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 5.5rem;
+    // float: right;
+}
+.home-page{
+    display: flex;
+    flex-direction: row;
+    float: right;
+}

@@ -1,12 +1,10 @@
-const UserWelcome = () => {
+const BankBanner = () => {
     return (
-        <div className="buttons-menu">
-            <h1>Bank-546</h1>
-            <h3>the only bank for your needs</h3>
-            <button>Sign Up</button>
-            <button>Log In</button>
+        <div className="bank-banner">
+            <h1>The best bank for your needs</h1>
+            <h3>Stocks, investments, we have it all!</h3>
         </div>
     )
 }
 
-export default UserWelcome;
+export default BankBanner;

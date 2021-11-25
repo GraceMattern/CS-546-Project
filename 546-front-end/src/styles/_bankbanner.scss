@@ -1,0 +1,18 @@
+.bank-banner {
+  width: 60vw;
+  height: 80vh;
+  background-color: #3a5edd;
+  border-bottom-left-radius: 50px;
+  border-top-left-radius: 50px;
+  h1,
+  h3 {
+    font-family: "Poppins";
+    color: #ffffff;
+  }
+  h1 {
+    font-weight: 400;
+  }
+  h3 {
+    font-weight: 300;
+  }
+}
