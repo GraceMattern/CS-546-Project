@@ -4,10 +4,15 @@
   background-color: #3a5edd;
   border-bottom-left-radius: 50px;
   border-top-left-radius: 50px;
+  //   position: relative;
+  //   top: 50%;
+  transform: translateY(12%);
   h1,
   h3 {
     font-family: "Poppins";
     color: #ffffff;
+    text-align: left;
+    // padding-right: 10vw;
   }
   h1 {
     font-weight: 400;
@@ -15,4 +20,20 @@
   h3 {
     font-weight: 300;
   }
+}
+
+.text{
+    // background-color: green;
+    // text-align: center;
+    width: 34vw;
+    margin-top: 28vh;
+    margin-left: 5vw;
+    // transform: translateY(250%);
+}
+
+.images{
+    padding-left: 25vw;
+    padding-top: 3vh;
+
+    overflow: hidden;
 }
