@@ -67,19 +67,43 @@ router.get('/:id', async (req,res) => {
 });
 
 //addTransaction
-router.post('/addTransaction', async (req,res) =>{
+router.post('/addTransaction', async (req, res) => {
     let accountInfo = req.body;
     if(!accountInfo){
-        res.status(400).json({ error: 'You must provide userId to remove a account' });
+        res.status(400).json({ error: 'You must provide accountId, transactionId, transactionAmount to add transaction' });
         return;
     }
-    if(!accountInfo.userId){
-        res.status(400).json({ error: 'You must provide userId to create a account' });
+    if(!accountInfo.accountId){
+        res.status(400).json({ error: 'You must provide accountId to add transaction' });
+        return;
+    }
+    if(!accountInfo.transactionId){
+        res.status(400).json({ error: 'You must provide transactionId to add transaction' });
+        return;
+    }
+    if(!accountInfo.transactionAmount){
+        res.status(400).json({ error: 'You must provide transactionAmount to add transaction' });
         return;
     }
     try {
-        isString(accountInfo.userId);
-        const result = await accountData.removeAccount(accountInfo.userId);
+        isString(accountInfo.accountId);
+        isString(accountInfo.transactionId);
+        const result = await accountData.addTransactions(accountInfo.accountId, accountInfo.transactionId, accountInfo.transactionAmount);
+        res.status(200).json(result);
+    } catch (e) {
+        res.status(400).json({error:e})
+    }
+})
+
+//removeAccount
+router.get('/removeAccount/:id', async (req,res) =>{
+    if(!req.params.id) {
+        res.status(400).json({error: `You must supply an id to get account by Id`});
+        return;
+    }
+    try {
+        isString(req.params.id);
+        const result = await accountData.removeAccount(req.params.id);
         res.status(200).json(result);
     } catch (e) {
         res.status(400).json({error:e})
