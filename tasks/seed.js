@@ -3,6 +3,7 @@ const data = require('../data/');
 /* add data files here */
 const users = data.users;
 const transactions = data.transactions;
+const accounts = data.accounts;
 
 async function main() {
     const db = await dbConnection.connectToDb();
@@ -13,13 +14,28 @@ async function main() {
     const johnId = john._id;
 
     const adam = await users.createUser('Adam', 'Smith', 'Citi', 'asmith@citi.com', 'test', 25);
-    const adamId = adam._id;
+    const adamId = adam._id.toString();
 
     const alice = await users.createUser('Alice', 'Cooper', 'Chase', 'acooper@chase.com', 'root', 20);
-    const aliceId = alice._id;
+    const aliceId = alice._id.toString();
 
     const sally = await users.createUser('Sally', 'Winters', 'Bank of America', 'swinters@bankofamerica.com', 'acb123', 26);
-    const sallyId = sally._id;
+    const sallyId = sally._id.toString();
+
+
+    //Create account
+
+    const johnAccount = await accounts.createAccount(johnId,"saving");
+    const johnAccountId = johnAccount._id.toString();
+
+    const adamAccount = await accounts.createAccount(adamId,"saving");
+    const adamAccountId = adamAccount._id.toString();
+
+    const aliceAccount = await accounts.createAccount(aliceId,"saving");
+    const aliceAccountId = aliceAccount._id.toString();
+
+    const sallyAccount = await accounts.createAccount(sallyId,"saving");
+    const sallyAccountId = sallyAccount._id.toString();
 
 	console.log('Done seeding database');
     await dbConnection.closeConnection();

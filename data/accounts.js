@@ -1,5 +1,7 @@
 const mongoCollections = require('../config/mongoCollections');
-const accounts = mongoCollections.accounts;
+const accountsCollections = mongoCollections.accounts;
+const usersConnection = mongoCollections.users;
+const users= require('./users');
 let { ObjectId } = require('mongodb');
 
 //***TYPE CHECKING***
@@ -36,7 +38,7 @@ async function createAccount(userId, accountType){
         balance: 0,
         transactions: []
     }
-    const accountCollection = await accounts();
+    const accountCollection = await accountsCollections();
     const insertInfo = await accountCollection.insertOne(newAccount);
     if (insertInfo.insertedCount === 0) throw 'Could not add account';
 
@@ -44,12 +46,26 @@ async function createAccount(userId, accountType){
     var newIdString = newId.toString();
     const accountResult = await this.getAccount(newIdString);
 
+    //add accountId into users connection
+    let userInfo = await users.getUserById(userId);
+    userInfo["accounts"].push(newIdString);
+    delete userInfo._id;
+    var ObjUserId = getObjectIdByString(userId);
+    const userCollection = await usersConnection();
+    const updatedInfo = await userCollection.updateOne(
+        { _id: ObjUserId },
+        { $set: userInfo }
+    );
+    if (updatedInfo.modifiedCount === 0) {
+        throw 'accounts.addTransactions Could not update account successfully';
+    }
+    
     return accountResult;
 }
 //return all accounts in array
 async function getAllAccounts() {
     if(arguments.length != 0) throw 'accounts.getAllAccounts() please not input';
-    const accountCollection = await accounts();
+    const accountCollection = await accountsCollections();
     const accountList = await accountCollection.find({}).toArray();
 
     return accountList;
@@ -60,25 +76,13 @@ async function getAccount(accountId){
     if(arguments.length != 1) throw 'accounts.getAccount(accountId) Please only input accountId'
 
     var ObjAccountId = getObjectIdByString(accountId);
-    const accountCollection = await accounts();
+    const accountCollection = await accountsCollections();
     const accountResult = await accountCollection.findOne({ _id: ObjAccountId });
     if (accountResult === null) throw 'No account with that id';
 
     return accountResult; 
 }
-/*
-//return userId in string
-async function getUserId(accountId){
-    if(!accountId || isString(accountId)) throw 'accounts.getUserId(accountId) Please input non-empty accountId';
-    if(arguments.length != 1) throw 'accounts.getUserId(accountId) Please only input accountId'
 
-    var account = await getAccount(accountId);
-    var userId = account['userId'];
-    if(typeof userId != 'string') throw 'the type of userId in accounts is not string';
-    
-    return userId;
-}
-*/
 //get balance, return balance in number
 async function getBalance(accountId){
     if(!accountId || isString(accountId)) throw 'accounts.getBalance(accountId) Please input non-empty accountId';
@@ -125,9 +129,10 @@ async function addTransactions(accountId, transactionId, transactionAmount){
     var newBalance = await getBalance(accountId);
     newTransactions.push(transactionId);
     newBalance += transactionAmount;
+    if(newBalance < 0) throw "Insufficient balance";
 
     var ObjAccountId = getObjectIdByString(accountId);
-    const accountCollection = await accounts();
+    const accountCollection = await accountsCollections();
     const updatedAccount = {
         balance: newBalance,
         transactions: newTransactions
@@ -151,7 +156,7 @@ async function removeAccount(accountId){
     var ObjAccountId = getObjectIdByString(accountId);
     var accountInfo = await this.getAccount(accountId);
 
-    const account = await accounts();
+    const account = await accountsCollections();
     const deletionInfo = await account.deleteOne({ _id: ObjAccountId });
         
     if (deletionInfo.deletedCount === 0) throw `Could not delete account with id of ${id}`;
