@@ -18,11 +18,31 @@ const UserWelcome = () => {
           </div>
         )}
         {userWelcomeState === "login" && (
-          <form className="form-div" noValidate autoComplete="off">
-            <TextField id="standard-basic" label="Username" />
-            <TextField id="standard-basic" label="Password" />
-            <button onClick={() => setUserWelcomeState("")}>Log In</button>
-          </form>
+          <div className="form-group">
+            <form className="form-div" noValidate autoComplete="off">
+              <TextField id="standard-basic" label="Email" />
+              <TextField id="standard-basic" label="Password" type="password" />
+            </form>
+            <button onClick={() => setUserWelcomeState("")}>Log In →</button>
+            <button onClick={() => setUserWelcomeState("home")}>
+            ← Back Home
+            </button>
+          </div>
+        )}
+        {userWelcomeState === "signup" && (
+          <div className="form-group">
+            <form className="form-div" noValidate autoComplete="off">
+              <TextField id="standard-basic" label="First Name" />
+              <TextField id="standard-basic" label="Last Name" />
+              <TextField id="standard-basic" label="Email" />
+              <TextField id="standard-basic" label="Password" type="password" />
+              <TextField id="standard-basic" label="Age" type="number" />
+            </form>
+            <button onClick={() => setUserWelcomeState("")}>Sign Up →</button>
+            <button onClick={() => setUserWelcomeState("home")}>
+            ← Back Home
+            </button>
+          </div>
         )}
       </div>
     </div>
