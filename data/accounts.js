@@ -1,6 +1,6 @@
 const mongoCollections = require('../config/mongoCollections');
 const accountsCollections = mongoCollections.accounts;
-const usersConnection = mongoCollections.users;
+const usersCollection = mongoCollections.users;
 const users= require('./users');
 let { ObjectId } = require('mongodb');
 
@@ -46,18 +46,19 @@ async function createAccount(userId, accountType){
     var newIdString = newId.toString();
     const accountResult = await this.getAccount(newIdString);
 
-    //add accountId into users connection
+    //add accountId into users collection
+    const userCollection = await usersCollection();
     let userInfo = await users.getUserById(userId);
     userInfo["accounts"].push(newIdString);
     delete userInfo._id;
     var ObjUserId = getObjectIdByString(userId);
-    const userCollection = await usersConnection();
+    //const userCollection = await usersCollection();
     const updatedInfo = await userCollection.updateOne(
         { _id: ObjUserId },
         { $set: userInfo }
     );
     if (updatedInfo.modifiedCount === 0) {
-        throw 'accounts.addTransactions Could not update account successfully';
+        throw 'accountsId Could not update successfully in userCollection when create';
     }
     
     return accountResult;
@@ -160,8 +161,32 @@ async function removeAccount(accountId){
     const deletionInfo = await account.deleteOne({ _id: ObjAccountId });
         
     if (deletionInfo.deletedCount === 0) throw `Could not delete account with id of ${id}`;
+    //remove accountId in users collection
+    const userCollection = await usersCollection();
+    var userInfo = await users.getUserById(accountInfo.userId);
+    var length = userInfo["accounts"].length;
+    for(let i = 0; i < length; i++)
+    {
+        if(userInfo.accounts[i] == accountId)
+        {
+            userInfo.accounts.splice(i,1);
+            break;
+        }
+        if(i == length -1) throw "Could not find that account ID";
+    }
+    console.log(userInfo.accounts);
+    delete userInfo._id;
+    var ObjUserId = getObjectIdByString(accountInfo["userId"]);
+    
+    const updatedInfo = await userCollection.updateOne(
+        { _id: ObjUserId },
+        { $set: userInfo }
+    );
+    if (updatedInfo.modifiedCount === 0) {
+        throw 'accountId Could not remove successfully in userCollection when remove';
+    }
         
-    return 'userId:' + accountInfo['userId'] + ' has been successfully deleted!';
+    return 'accountId:' + accountInfo['_id'] + ' has been successfully deleted!';
 }
 
 module.exports = {
