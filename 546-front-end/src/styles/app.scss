@@ -1,8 +1,14 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 @import "./userwelcome";
-@import "./bankbanner"
+@import "./bankbanner";
+@import "./dashboardhome";
+@import "./sidenav";
+@import "./accountdashboard";
+@import "./quickaccessdashboard";
+@import "./transaction-dashboard";
+@import "./spendingdashboard";

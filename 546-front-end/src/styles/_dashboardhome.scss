@@ -1,0 +1,31 @@
+.dashboard-home {
+  height: 126vh;
+  background: #e5e5e5;
+  display: flex;
+}
+
+.dashboard-home1 {
+  position: absolute;
+  top: 1.5vw;
+  left: 19vw;
+}
+
+.dashboard-home2 {
+  position: absolute;
+  top: 1.5vw;
+  left: 70vw;
+}
+
+.dashboard-bottom {
+  position: absolute;
+  bottom: -5vw;
+  left: 19vw;
+  // height: 43vh;
+}
+
+.dashboard-bottom2 {
+  position: absolute;
+  bottom: -5vw;
+  left: 75vw;
+  // height: 43vh;
+}

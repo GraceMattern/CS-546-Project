@@ -3,7 +3,7 @@ import TextField from "@material-ui/core/TextField";
 const UserWelcome = () => {
   const [userWelcomeState, setUserWelcomeState] = useState("home");
   return (
-    <div className="sidebar">
+    <div className="sidebarlogin">
       <div className="buttons-menu">
         <h1>Bank-546</h1>
         <h3>

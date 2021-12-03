@@ -1,0 +1,50 @@
+.transaction-dashboard {
+  background: white;
+  height: 55vh;
+  width: 70vh;
+  margin-top: 5rem;
+  margin-left: 8rem;
+  border-radius: 6px;
+  border: 1px;
+  border-color: #e3e3e3;
+  border-style: solid;
+  h1{
+      font-family: "Poppins";
+      font-weight: 600;
+      color: #423d3d;
+      font-size: 20px;
+      text-align: center;
+      padding-bottom: 1.5rem;
+      padding-top: 1rem;
+  }
+  // display: flex;
+  // flex-direction: column;
+  // align-items: center;
+}
+.headers {
+  h3 {
+    color: #929597;
+    font-size: 14px;
+    font-family: "Poppins";
+    font-weight: 500;
+  }
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 0.7rem;
+}
+
+.transaction {
+  padding-top: 1.2rem;
+  display: flex;
+  justify-content: space-evenly;
+  h4 {
+    color: #707578;
+    font-family: "Poppins";
+    font-size: 15px;
+    font-weight: 400;
+  }
+  //   margin-right: 4.2rem;
+}
+.green{
+  color: green;
+}
