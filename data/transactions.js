@@ -8,7 +8,7 @@ function isString(a){
     if(typeof a != 'string') throw 'Type is not String';
     if (a.length == 0 || a.trim().length == 0) throw 'content is empty';
 }
-//creat new transaction after successful transaction and return obj
+//create new transaction after successful transaction and return object
 async function createTrans(accountId,toAccountId,balance){
     if(!accountId || isString(accountId) || !toAccountId || isString(toAccountId) || !balance || typeof(balance)!=="number") throw 'Please input Valid and non empty Account Ids and balance!';
     if (balance<0) throw "Balance should be positive Value";
