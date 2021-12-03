@@ -18,7 +18,7 @@ async function createTrans(accountId,toAccountId,balance){
         accountId:accountId,
         userId:foundUserId['userId'],
         toAccountId:toAccountId,
-        balance:balance,
+        transAmount:balance,
         date:{MM: CurrDate.getMonth()+1, DD:CurrDate.getDate(),YYYY: CurrDate.getFullYear()},
         tag:[]
     }
