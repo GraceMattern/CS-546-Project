@@ -28,7 +28,7 @@ async function createTrans(accountId,toAccountId,balance){
 
     const newId = insertInfo.insertedId;        
     var newIdString = newId.toString();
-   
+
     const accCollect= await accountsCollections();
     const found= await accounts.getAccount(accountId);
     if(!found) throw 'The Account does not exists!';
@@ -50,6 +50,41 @@ async function getAlltrans() {
     return transList;
 }
 
+//Get all transactions between given intervals
+async function getFilterTrans(fromDate,toDate){
+    if(!fromDate || !toDate) throw 'Please provide both dates'
+    const transCollection = await transactions();
+    const transList = await transCollection.find({}).toArray();
+    var ListofDays = [31,28,31,30,31,30,31,31,30,31,30,31];
+ 
+    allDates=[]
+    const startDate= new Date(fromDate);
+    const endDate= new Date(toDate);
+    if(isNaN(startDate.getTime()) || isNaN(endDate.getTime())){
+        throw 'Date is not Valid'
+    } 
+    
+    if(startDate.getTime()>endDate.getTime()){
+        throw 'Start Date should not be greater than End Date'
+    }
+    if(endDate.getTime()>new Date()){
+        throw 'End Date should not be greater than Current Date'
+    }
+    // console.log(moment("06/22/2015", "MM/DD/YYYY", true).isValid())
+    for(i=0; i<transList.length;i++){
+        tempDate=transList[i]['date']['MM']+'-'+transList[i]['date']['DD']+'-'+transList[i]['date']['YYYY'];
+        tempDate= new Date(tempDate)
+        if (tempDate>=startDate && tempDate<=endDate){
+            allDates.push({"id":transList[i]['_id'].toString(),"date": tempDate})
+        }
+    }
+    allDates.sort((a,b) => a.date- b.date)
+    finalList=[]
+    for(i=0; i<allDates.length;i++){
+        finalList.push({"id":allDates[i]['id'],"Date":allDates[i]['date'].getMonth()+1+'-'+allDates[i]['date'].getDate()+'-'+allDates[i]['date'].getFullYear()});
+    }
+    return finalList;
+}
 
 async function updateTag(transID, newComment){
     if(!transID || isString(transID) || !newComment) throw 'Please input Valid and non empty Trans Ids and New Comment!';
@@ -129,6 +164,7 @@ module.exports = {
     createTrans,
     getAlltrans,
     getTransById,
+    getFilterTrans,
     updateTag,
     updateBalance
 }

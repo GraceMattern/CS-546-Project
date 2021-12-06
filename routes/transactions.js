@@ -66,6 +66,7 @@
 
 
     router.get('/:id', async (req,res) =>{
+
         if(!req.params.id) {
             res.status(400).json({error: `You must supply an id to get user by Id`});
             return;
@@ -79,6 +80,20 @@
         }
     });
 
+    router.get('/filter/myfilter', async (req,res) =>{
+        const {fromDate, toDate} = req.body;
+        if(!fromDate) {
+            res.status(400).json({error: `You must supply From Date in a filter`});
+            return;
+        }
+
+        try {
+            let trans = await transData.getFilterTrans(fromDate,toDate);
+            res.status(200).json(trans);
+        } catch (e) {
+            res.status(404).json({error:e})
+        }
+    });
 
 
     module.exports = router;
