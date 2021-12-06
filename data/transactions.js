@@ -9,7 +9,6 @@ function isString(a) {
   if (a.trim().length == 0) throw "content is empty";
 }
 //create new transaction after successful transaction and return object
-<<<<<<< HEAD
 async function createTrans(userId, accountId, toAccountId, amount, tag) {
   if (!accountId || isString(accountId) || !toAccountId || isString(toAccountId))
     throw "Please input a non empty Account Ids!";
@@ -54,7 +53,6 @@ async function createTrans(userId, accountId, toAccountId, amount, tag) {
       { _id: ObjectId(accountId) },
       { $set: found }
     );
-=======
 async function createTrans(accountId,toAccountId,balance){
     if(!accountId || isString(accountId) || !toAccountId || isString(toAccountId) || !balance || typeof(balance)!=="number") throw 'Please input Valid and non empty Account Ids and balance!';
     if (balance<0) throw "Balance should be positive Value";
@@ -84,7 +82,6 @@ async function createTrans(accountId,toAccountId,balance){
     }
     tempArr.push(newId.toString())
     const updatedInfo = await accCollect.updateOne({_id:ObjectId(accountId)},{ $set: {transactions:tempArr}});
->>>>>>> 5ef9c0be0d63eca26a6f9228306a1e79601566b2
     if (!updatedInfo.matchedCount && !updatedInfo.modifiedCount)
       throw "Update failed";
     // return await accounts.getAccount(accountId);
@@ -117,23 +114,6 @@ async function getAlltrans() {
   return transList;
 }
 
-<<<<<<< HEAD
-async function updateTag(transID, newComment) {
-  if (!transID || isString(transID) || !newComment)
-    throw "Please input Valid and non empty Trans Ids and New Comment!";
-
-  let objId = ObjectId(transID);
-  const transCollection = await transactions();
-  const found = await transCollection.findOne({ _id: objId });
-  if (!found) throw "trans not found";
-  let updatedInfo = await transCollection.updateOne(
-    { _id: objId },
-    { $set: { tag: newComment } }
-  );
-  if (updatedInfo.modifiedCount === 0) throw "could not update transaction";
-
-  return getTransById(transID);
-=======
 //Get all transactions between given intervals
 async function getFilterTrans(fromDate,toDate){
     if(!fromDate || !toDate) throw 'Please provide both dates'
@@ -181,7 +161,6 @@ async function updateTag(transID, newComment){
     if(updatedInfo.modifiedCount === 0) throw "could not update transaction";
 
     return getTransById(transID);
->>>>>>> 5ef9c0be0d63eca26a6f9228306a1e79601566b2
 }
 
 //return userId in string
@@ -263,7 +242,6 @@ async function update(transId, toAccountId, amount, tag, date) {
   }
 }
 
-<<<<<<< HEAD
 async function getDetails(arr) {
   let result = []
   for (let id of arr) {
@@ -272,15 +250,6 @@ async function getDetails(arr) {
   }
   if(!result) throw `unable to find details of the transaction id(s) given`
   return result
-=======
-module.exports = {
-    createTrans,
-    getAlltrans,
-    getTransById,
-    getFilterTrans,
-    updateTag,
-    updateBalance
->>>>>>> 5ef9c0be0d63eca26a6f9228306a1e79601566b2
 }
 
 module.exports = {
