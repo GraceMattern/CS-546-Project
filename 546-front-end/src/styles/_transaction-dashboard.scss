@@ -1,6 +1,6 @@
 .transaction-dashboard {
   background: white;
-  height: 55vh;
+  height: 62vh;
   width: 70vh;
   margin-top: 5rem;
   margin-left: 8rem;
@@ -8,19 +8,39 @@
   border: 1px;
   border-color: #e3e3e3;
   border-style: solid;
-  h1{
-      font-family: "Poppins";
-      font-weight: 600;
-      color: #423d3d;
-      font-size: 20px;
-      text-align: center;
-      padding-bottom: 1.5rem;
-      padding-top: 1rem;
+  h1 {
+    font-family: "Poppins";
+    font-weight: 600;
+    color: #423d3d;
+    font-size: 20px;
+    text-align: center;
+    padding-bottom: 0.4rem;
+    padding-top: 1rem;
   }
+  // h3{
+  //   position: relative;
+  //   top:0;
+  //   right:0;
+  // }
   // display: flex;
   // flex-direction: column;
   // align-items: center;
 }
+
+.headers-transaction {
+  display: flex;
+  align-items: center;
+  h1 {
+    text-align: center;
+    padding-right: 4rem;
+  }
+  padding-left: 7.5vw;
+  .add-transaction{
+    padding-top: .7rem;
+    cursor: pointer;
+  }
+}
+
 .headers {
   h3 {
     color: #929597;
@@ -30,6 +50,7 @@
   }
   display: flex;
   justify-content: space-evenly;
+  margin-right: 5rem;
   margin-top: 0.7rem;
 }
 
@@ -45,6 +66,17 @@
   }
   //   margin-right: 4.2rem;
 }
-.green{
+.green {
   color: green;
+}
+
+.deleteTransaction {
+  cursor: pointer;
+}
+.editTransaction {
+  cursor: pointer;
+}
+
+.filter-transaction {
+  // display: flex;
 }

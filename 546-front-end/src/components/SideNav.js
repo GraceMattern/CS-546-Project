@@ -20,14 +20,10 @@ const SideNav = () => {
             {" "}
             <FontAwesomeIcon icon={faHome}></FontAwesomeIcon> Overview
           </li>
-          <li onClick={() => history.push(`/transactions`)}>
-            {" "}
-            <FontAwesomeIcon icon={faMoneyBill}></FontAwesomeIcon> Transactions
-          </li>
-          <li onClick={() => history.push(`/stocks`)}>
+          {/* <li onClick={() => history.push(`/stocks`)}>
             {" "}
             <FontAwesomeIcon icon={faChartLine}></FontAwesomeIcon> Stocks
-          </li>
+          </li> */}
           <li onClick={() => history.push(`/profile`)}>
             {" "}
             <FontAwesomeIcon icon={faUserCircle}></FontAwesomeIcon> Profile
