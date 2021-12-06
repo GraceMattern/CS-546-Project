@@ -53,6 +53,7 @@ async function createTrans(userId, accountId, toAccountId, amount, tag) {
       { _id: ObjectId(accountId) },
       { $set: found }
     );
+  }
 async function createTrans(accountId,toAccountId,balance){
     if(!accountId || isString(accountId) || !toAccountId || isString(toAccountId) || !balance || typeof(balance)!=="number") throw 'Please input Valid and non empty Account Ids and balance!';
     if (balance<0) throw "Balance should be positive Value";
