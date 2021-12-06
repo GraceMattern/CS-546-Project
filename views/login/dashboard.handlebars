@@ -1,0 +1,50 @@
+<div class="dashboard-header">
+<p>Account ID: {{account._id}}</p> 
+<p>Account type: {{account.accountType}}</p>
+<form action="/profile">
+    <button type="submit" class="btn btn-dark">View Profile</button>
+</form>
+<br>
+</div>
+
+
+<div id="body-box">
+    <div class="dashboard-container">
+        <h1>{{title}}</h1>
+        
+        <p>Balance: {{account.balance}}</p>
+
+        <form action='/deposit/{{account._id}}'>
+            <button type="submit" class="btn btn-dark">Make a deposit</button>
+        </form>
+        <br>
+        <form action="/transaction/{{account._id}}">
+            <button type="submit" class="btn btn-dark">Make a transaction</button>
+        </form>
+        <br>
+
+        <p>Transaction History</p>
+    {{!-- START: container for history --}}
+     {{#if trans}}
+        <ul>
+            {{#each trans}}
+                <li>
+                    {{this.transAmount}}
+                    {{this.date.DD}}.{{this.date.MM}}.{{this.date.YYYY}}
+                    {{this.tag}}
+                    {{#ifEquals this.toAccountId "external_transaction"}}
+                        <a href="/edit/transaction/{{this._id}}">Edit</a>
+                    {{/ifEquals}}
+                   {{#ifEquals this.toAccountId "internal_deposit"}}
+                        <a href="/edit/deposit/{{this._id}}">Edit</a>   
+                    {{/ifEquals}}
+                    <a href="/delete/{{this._id}}">Delete</a>       
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p>View your history by first making a deposit or transaction</p>
+    {{/if}}
+    {{!-- END: container for history --}}
+    </div>
+</div>

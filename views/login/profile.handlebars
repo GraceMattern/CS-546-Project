@@ -1,0 +1,38 @@
+<div id="body-box">
+    <div class="profile-container">
+    <h1>{{title}}</h1>
+    <p>Name: {{user.firstName}} {{user.lastName}} </p>
+    <p>Email: {{user.username}}</p>
+    <p>Bank: {{user.bank}}</p>
+    <p>Age: {{user.age}}</p>
+    <p>Accounts:</p>
+    
+    {{#if accts.accounts}}
+    <ul>
+        {{#each accts.accounts}}
+            <li>
+                <a href="/dashboard/{{this}}">{{this}}</a>            
+            </li>
+        {{/each}}
+    </ul>
+    {{else}}
+        <p>You currently don't have any registered accounts</p>
+    {{/if}}
+    <form action="/edit/user/{{user._id}}"> 
+        <button type="submit" class="btn btn-dark">Edit Profile</button>
+    </form>
+    <br>
+    <form action="/accounts">
+        <button type="submit" class="btn btn-dark">Add an Account</button>
+    </form>
+    <br>
+    <form action="/transfer">
+        <button type="submit" class="btn btn-dark">Transfer Funds</button>
+    </form>
+    <br>
+    <form action="/logout">
+        <button type="submit" class="btn btn-dark">Logout</button>
+    </form>
+    
+    </div>
+</div>

@@ -1,0 +1,144 @@
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	font-size: 14pt;
+}
+
+body {
+	background: #dedede;
+	font-family: Helvetica, Arial, sans-serif, serif;
+}
+
+main {
+	max-width: 75%;
+	margin: auto;
+    padding-top: 35px;
+    padding-bottom: 70px;
+    padding-left: 0px;
+    padding-right: 35px;
+}
+
+header {
+    border-bottom: 1px solid #afafaf;
+}
+
+footer {
+    width: 100%;
+    text-align: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	color: #222;
+	margin-bottom: 5px;
+}
+
+h1 {
+	font-size: 2rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+}
+
+h3 {
+	font-size: 1.35rem;
+}
+
+h4 {
+	font-size: 1.25rem;
+}
+
+h5 {
+	font-size: 1.15rem;
+}
+
+h6 {
+	font-size: 1.05rem;
+}
+
+p {
+	font-size: 1rem;
+}
+
+label {
+	font-weight: bold;
+}
+
+.headerContent > img,
+.headerContent > p {
+    display: inline-block;
+}
+#companyName {
+    font-size: 200%;
+    font-weight: bolder;
+}
+
+#logoImg {
+    width: 70px;
+    height: 70px;
+}
+
+.error {
+    color: red;
+}
+
+
+/* ==============================================BIG BREAK */
+
+
+#body-box{
+    display:flex;
+    justify-content:space-around;
+    flex-wrap:wrap;
+}
+#body-box2{
+    display:flex;
+    justify-content:space-around;
+    flex-wrap:wrap;
+}
+
+.container{
+    margin:5%;
+    padding:2%;
+    border:2px solid black;
+    width:40%;
+    border-radius:5px;
+}
+.profile-container{
+    margin:5%;
+    padding:2%;
+    border:2px solid black;
+    width:40%;
+    border-radius:5px;
+    display: inline-block;
+}
+
+.dashboard-container{
+    padding:2%;
+    border:2px solid black;
+    width:40%;
+    border-radius:5px;
+    display: inline-block;
+}
+
+.dashboard-header {
+    text-align: right;
+    padding:2%;
+}
+
+@media only screen and (max-width: 700px) {
+    .container{
+        width:100%;
+    }
+    .profile-container{
+        height:400px;
+    }
+}

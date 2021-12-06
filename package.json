@@ -8,18 +8,17 @@
     "start": "node app.js",
     "seed": "node ./tasks/seed.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/GraceMattern/CS-546-Project.git"
-  },
-  "author": "Team 6: Cheng Chen, Maor Mashiach, Grace Mattern, Pratik Patil",
+  "author": "Grace Mattern 10447142",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/GraceMattern/CS-546-Project/issues"
-  },
-  "homepage": "https://github.com/GraceMattern/CS-546-Project#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.6",
     "express": "^4.17.1",
-    "mongodb": "^4.1.4"
+    "express-handlebars": "^3.1.0",
+    "express-session": "^1.17.2",
+    "handlebars": "^4.7.7",
+    "mongodb": "^4.2.0",
+    "path": "^0.12.7"
   }
 }

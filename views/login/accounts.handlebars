@@ -1,0 +1,17 @@
+<div id="body-box">
+<div class="container">
+<h1>{{title}}</h1>
+
+<form id="account-form" method="post" action="/profile">
+    <p>Select the account type</p>
+    <input type="radio" name="accountType" id="savings" value="savings">
+    <label for="savings">Savings</label><br>
+    <input type="radio" name="accountType" id="checkings" value="checkings">
+    <label for="checkings">Checkings</label><br>
+    <button type="submit" class="btn btn-dark">Add account</button>
+</form>
+<div class="error">
+  {{warning}} 
+</div>
+</div>
+</div>

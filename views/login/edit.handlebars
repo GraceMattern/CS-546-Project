@@ -1,0 +1,48 @@
+<div id="body-box">
+<div class="container">
+<h1>{{title}}</h1>
+
+{{#ifEquals type "transaction"}}
+<form id="edit-form" method="post" action="/transaction/{{transId}}">
+    <label for="transaction">Transaction Amount:</label>
+    <input type="number" placeholder="Enter transaction amount" name="transaction" id="transaction"  min="0.01" step="0.01">
+    <br>
+    <label for="date">Start date:</label>
+    <input type="date" id="date" name="date">
+    <br>
+    <label for="tag">Choose a tag:</label>
+    <select name="tag" id="tag">        
+        <option value="food">Food</option>
+        <option value="goods">Goods and Services</option>
+        <option value="transport">Transport</option>
+        <option value="utilities">Utilities</option>
+        <option value="other">Other</option>
+    </select>
+    <br>
+    <button type="submit" class="btn btn-dark">Submit</button>
+</form>
+{{/ifEquals}}
+{{#ifEquals type "deposit"}}
+<form id="edit-form" method="post" action="/deposit/{{transId}}"> 
+{{!-- this is actually a put route --}}
+<label for="deposit">Deposit Amount:</label>
+    <input type="number" placeholder="Enter deposit amount" name="deposit" id="deposit"  min="0.01" step="0.01">
+    <br>
+    <label for="date">Start date:</label>
+    <input type="date" id="date" name="date">
+    <br>
+    <label for="tag">Choose a tag:</label>
+    <select name="tag" id="tag">        
+        <option value="investment">Investment</option>
+        <option value="salary">Salary</option>
+        <option value="other">Other</option>
+    </select>
+    <br>
+    <button type="submit" class="btn btn-dark">Submit</button>
+</form>
+{{/ifEquals}}
+<div class="error">
+  {{warning}} 
+</div>
+</div>
+</div>
