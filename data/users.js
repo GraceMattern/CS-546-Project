@@ -10,10 +10,9 @@ function isString(str, varName) {
   if (str.trim().length == 0) throw `${varName} cannot just be empty spaces`;
 }
 function isAdult(num) {
-  // TODO may require alteration if joint account
-  if (!num && parseInt(num) != 0) throw `Age must be provided`;
-  if (typeof parseInt(num) != "number") throw `Age must be a number`;
-  // if (num < MIN_ADULT_AGE || num > MAX_ADULT_AGE) throw  `${varName} must be a number between ${MIN_ADULT_AGE} and ${MAX_ADULT_AGE}`
+  if (!num && parseFloat(num) != 0) throw `Age must be provided`;
+  if (typeof parseFloat(num) != "number") throw `Age must be a number`;
+  if (parseFloat(num) < 18) throw  `You must be at least 18 years old`
 }
 // ----------ERROR HANDLING----------
 function isEmail(bank, email) {
@@ -71,7 +70,7 @@ module.exports = {
     // check that the username i.e. the email is unique
     const userCollection = await users();
     const otherUser = await userCollection.findOne({ username: email });
-    if (otherUser != null) throw `There is already a user with that email`;
+    if (otherUser != null) throw `There is already a user with that email ${email} ${otherUser}`;
 
     // encrypt
     const hash = await bcrypt.hash(password, saltRounds);

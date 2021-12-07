@@ -29,5 +29,23 @@ email: swinters@bankofamerica.com\
 password: acb123
 
 ## Sample Usage
+1. Run the application
+2. Sign up
+3. Login
+4. View user profile
+5. Add account
+6. View account
+7. Make deposit $1000 and $100
+8. Make transaction $50 and $20
+9. Edit deposit $1000 to $2000
+10. Edit transaction $50 to $150
+11. Delete deposit $100
+12. Delete transaction $20
+13. View user profile
+14. Make another account
+15. Transfer funds
+16. Edit profile
+17. Delete account
+18. Logout
 
 ## Extra Features

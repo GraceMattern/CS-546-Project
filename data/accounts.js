@@ -7,15 +7,15 @@ let { ObjectId } = require("mongodb");
 //***TYPE CHECKING***
 
 //Change stringID into ObjectID; return ObjectID
-function getObjectIdByString(id) {
-  if (!id) throw "Please input ID in string";
-  isString(id);
-  let parsedId = ObjectId(id);
-  return parsedId;
-}
+// function getObjectIdByString(id) {
+//   if (!id) throw "Please input ID in string";
+//   isString(id);
+//   let parsedId = ObjectId(id);
+//   return parsedId;
+// }
 //Check string and empty; Return T or F
 function isString(a) {
-  if (typeof a != "string") throw "Type is not String";
+  if (typeof a != "string") throw `Type is not String ${a} is a ${typeof a}`;
   if (a.length == 0 || a.trim().length == 0) throw "content is empty";
 }
 //Check ObjectId
@@ -54,7 +54,12 @@ async function createAccount(userId, accountType) {
   if (!userInfo) throw `The user does not exist`;
   userInfo["accounts"].push(newId);
   delete userInfo._id; 
-  var ObjUserId = getObjectIdByString(userId);
+  let ObjUserId;
+  try {
+    ObjUserId = ObjectId(userId.trim());
+  } catch (e) {
+    throw e.message;
+  }
   const updatedInfo = await userCollection.updateOne(
     { _id: ObjUserId },
     { $set: userInfo }
@@ -84,7 +89,12 @@ async function getAccount(accountId) {
   if (arguments.length != 1)
     throw "accounts.getAccount(accountId) Please only input accountId";
 
-  var ObjAccountId = getObjectIdByString(accountId);
+  let ObjAccountId;
+  try {
+    ObjAccountId = ObjectId(accountId.trim());
+  } catch (e) {
+    throw e.message;
+  }
   const accountCollection = await accountsCollections();
   const accountResult = await accountCollection.findOne({ _id: ObjAccountId });
   if (accountResult === null) throw "No account with that id";
@@ -114,6 +124,7 @@ async function getTransactions(accountId) {
     throw "accounts.getTransactions(accountId) Please only input accountId";
 
   var account = await getAccount(accountId);
+  if (!account) throw `there is not account with that id`
   var transactions = account["transactions"];
   if (!Array.isArray(transactions))
     throw "the type of balance in accounts is not array";
@@ -122,38 +133,43 @@ async function getTransactions(accountId) {
 }
 
 //add new transaction and update balance, return account.
-async function addTransactions(accountId, transactionId, transactionAmount) {
-  if (!accountId || isString(accountId))
-    throw "accounts.addTransactions(accountId, transactionId, transactionAmount) Please input non-empty accountId";
-  if (!transactionId || isString(transactionId))
-    throw "accounts.addTransactions(accountId, transactionId, transactionAmount) Please input non-empty transactionId";
-  if (!transactionAmount || typeof transactionAmount != "number")
-    throw "accounts.addTransactions(accountId, transactionId, transactionAmount) Please input transactionId in type of number";
-  if (arguments.length != 3)
-    throw "accounts.addTransactions(accountId, transactionId, transactionAmount) Please input accountId, transactionId, transactionAmount";
+// async function addTransactions(accountId, transactionId, transactionAmount) {
+//   if (!accountId || isString(accountId))
+//     throw "accounts.addTransactions(accountId, transactionId, transactionAmount) Please input non-empty accountId";
+//   if (!transactionId || isString(transactionId))
+//     throw "accounts.addTransactions(accountId, transactionId, transactionAmount) Please input non-empty transactionId";
+//   if (!transactionAmount || typeof transactionAmount != "number")
+//     throw "accounts.addTransactions(accountId, transactionId, transactionAmount) Please input transactionId in type of number";
+//   if (arguments.length != 3)
+//     throw "accounts.addTransactions(accountId, transactionId, transactionAmount) Please input accountId, transactionId, transactionAmount";
 
-  var newTransactions = await getTransactions(accountId);
-  var newBalance = await getBalance(accountId);
-  newTransactions.push(transactionId);
-  newBalance += transactionAmount;
-  if (newBalance < 0) throw "Insufficient balance";
+//   var newTransactions = await getTransactions(accountId);
+//   var newBalance = await getBalance(accountId);
+//   newTransactions.push(transactionId);
+//   newBalance += transactionAmount;
+//   if (newBalance < 0) throw "Insufficient balance";
 
-  var ObjAccountId = getObjectIdByString(accountId);
-  const accountCollection = await accountsCollections();
-  const updatedAccount = {
-    balance: newBalance,
-    transactions: newTransactions,
-  };
-  const updatedInfo = await accountCollection.updateOne(
-    { _id: ObjAccountId },
-    { $set: updatedAccount }
-  );
-  if (updatedInfo.modifiedCount === 0) {
-    throw "accounts.addTransactions Could not update account successfully";
-  }
+//   let ObjAccountId;
+//     try {
+//       ObjAccountId = ObjectId(accountId.trim());
+//     } catch (e) {
+//       throw e.message;
+//     }
+//   const accountCollection = await accountsCollections();
+//   const updatedAccount = {
+//     balance: newBalance,
+//     transactions: newTransactions,
+//   };
+//   const updatedInfo = await accountCollection.updateOne(
+//     { _id: ObjAccountId },
+//     { $set: updatedAccount }
+//   );
+//   if (updatedInfo.modifiedCount === 0) {
+//     throw "accounts.addTransactions Could not update account successfully";
+//   }
 
-  return await this.getAccount(accountId);
-}
+//   return await this.getAccount(accountId);
+// }
 
 //remove account
 async function removeAccount(accountId) {
@@ -162,28 +178,36 @@ async function removeAccount(accountId) {
   if (arguments.length != 1)
     throw "accounts.removeAccount(accountId) Please only input accountId";
 
-  var ObjAccountId = getObjectIdByString(accountId);
-  var accountInfo = await this.getAccount(accountId);
-
+  let ObjAccountId;
+  try {
+    ObjAccountId = ObjectId(accountId.trim());
+  } catch (e) {
+    throw e.message;
+  }
   const account = await accountsCollections();
-  const deletionInfo = await account.deleteOne({ _id: ObjAccountId });
-
-  if (deletionInfo.deletedCount === 0)
-    throw `Could not delete account with id of ${id}`;
+  var accountInfo = await this.getAccount(accountId);
+  if (!accountInfo) throw `there is no account with that id`
+ 
   //remove accountId in users collection
   const userCollection = await usersCollection();
   var userInfo = await users.getUserById(accountInfo.userId);
+  if (!userInfo) throw `there is no user that that id`
   var length = userInfo["accounts"].length;
   for (let i = 0; i < length; i++) {
     if (userInfo.accounts[i] == accountId) {
       userInfo.accounts.splice(i, 1);
       break;
     }
-    if (i == length - 1) throw "Could not find that account ID";
+    if (i == length - 1) throw "no user with that account ID";
   }
-  console.log(userInfo.accounts);
+  // console.log(userInfo.accounts);
   delete userInfo._id;
-  var ObjUserId = getObjectIdByString(accountInfo["userId"]);
+  let ObjUserId;
+  try {
+    ObjUserId = ObjectId(accountInfo["userId"].trim());
+  } catch (e) {
+    throw e.message;
+  }
 
   const updatedInfo = await userCollection.updateOne(
     { _id: ObjUserId },
@@ -193,13 +217,45 @@ async function removeAccount(accountId) {
     throw "accountId Could not remove successfully in userCollection when remove";
   }
 
-  return "accountId:" + accountInfo["_id"] + " has been successfully deleted!";
+  // return "accountId:" + accountInfo["_id"] + " has been successfully deleted!";
+  const deletionInfo = await account.deleteOne({ _id: ObjAccountId });
+  if (deletionInfo.deletedCount === 0)
+    throw `Could not delete account with id of ${id}`;
+
+  return updatedInfo.accounts
+}
+
+async function getAccountByTransId(transId) {
+  if (!transId || isString(transId)) throw `must provide trans id`
+  let parsedId;
+  try {
+    parsedId = ObjectId(transId.trim());
+  } catch (e) {
+    throw e.message;
+  }
+
+  let accountCollection = await accountsCollections();
+  let accountList = await accountCollection.find({}).toArray();
+  if(!accountList) throw `there are no accounts in the systems thus no transaction`
+  let result;
+  for (let i of accountList) {
+    for (let j =0; j < i.transactions.length; j++) {
+      if (i.transactions[j] == transId) {
+        result = i._id;
+      } 
+    }
+  }
+  if (!result) throw `no transaction with that id was found in a user's history`
+  return result
 }
 
 module.exports = {
   createAccount,
   getAllAccounts,
   getAccount,
-  addTransactions,
+  // addTransactions,
+  getBalance,
+  getTransactions,
   removeAccount,
+  getAccountByTransId,
 };
