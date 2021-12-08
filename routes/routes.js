@@ -677,6 +677,40 @@ router.get('/delete/deposit/:transId', async (req, res) => {
     }
 })
 
+// Delete Transaction
+router.get('/delete/transaction/:transId', async (req, res) => {
+    if(req.session.user){
+        if(!req.params.transId) {
+            res.status(400).render('login/error',{title:'Error', error:'Must supply transaction id',});
+            return;
+        }
+        if (typeof req.params.transId != "string") {
+            res.status(400).render('login/error',{title:'Error', error:'transaction id must be a string',});
+            return;
+        }
+        if (req.params.transId.trim().length == 0) {
+            res.status(400).render('login/error',{title:'Error', error:'transaction id cannot be an empty string',});
+            return;
+        }
+
+        // TODO do i need to try to mongodb objId check
+
+        try {
+            const accountId = await accountData.getAccountByTransId(req.params.transId.toString())
+            const deleteTrans = await transData.deleteTrans(req.params.transId.toString(), type="transaction")
+            const account = await accountData.getAccount(accountId.toString())
+            const allTrans = await transData.getDetails(deleteTrans)
+            res.status(200).render('login/dashboard', {title:`Dashboard`, account: account, trans: allTrans})
+        } catch (e) {
+            res.status(400).render('login/error',{title:'Error', error:`${e}`});
+        }
+    }else{
+        res.render('login/error',{title:'Error', error:'Please login',});
+    }
+
+});
+
+
 router.get('/edit/transaction/:transId', async (req, res) => {
     if(req.session.user){
         if(!req.params.transId) {
