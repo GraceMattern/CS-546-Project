@@ -101,57 +101,77 @@ async function getAlltrans() {
 
 //Get all transactions between given intervals
 async function getFilterTrans(fromDate,toDate){
-  if(!fromDate || !toDate) throw 'Please provide both dates'
-  const transCollection = await transactions();
-  const transList = await transCollection.find({}).toArray();
-  var ListofDays = [31,28,31,30,31,30,31,31,30,31,30,31];
-
-  allDates=[]
-  const startDate= new Date(fromDate);
-  const endDate= new Date(toDate);
-  if(isNaN(startDate.getTime()) || isNaN(endDate.getTime())){
-      throw 'Date is not Valid'
-  } 
-  
-  if(startDate.getTime()>endDate.getTime()){
-      throw 'Start Date should not be greater than End Date'
-  }
-  if(endDate.getTime()>new Date()){
-      throw 'End Date should not be greater than Current Date'
-  }
-  for(i=0; i<transList.length;i++){
-      tempDate=transList[i]['date']['MM']+'-'+transList[i]['date']['DD']+'-'+transList[i]['date']['YYYY'];
-      tempDate= new Date(tempDate)
-      if (tempDate>=startDate && tempDate<=endDate){
-          allDates.push({"id":transList[i]['_id'].toString(),"date": tempDate})
-      }
-  }
-  allDates.sort((a,b) => a.date- b.date)
-  finalList=[]
-  for(i=0; i<allDates.length;i++){
-      finalList.push({"id":allDates[i]['id'],"Date":allDates[i]['date'].getMonth()+1+'-'+allDates[i]['date'].getDate()+'-'+allDates[i]['date'].getFullYear()});
-  }
-  return finalList;
+    if(!fromDate || !toDate) throw 'Please provide both dates'
+    const transCollection = await transactions();
+    const transList = await transCollection.find({}).toArray();
+    var ListofDays = [31,28,31,30,31,30,31,31,30,31,30,31];
+ 
+    allDates=[]
+    const startDate= new Date(fromDate);
+    const endDate= new Date(toDate);
+    if(isNaN(startDate.getTime()) || isNaN(endDate.getTime())){
+        throw 'Date is not Valid'
+    } 
+    
+    if(startDate.getTime()>endDate.getTime()){
+        throw 'Start Date should not be greater than End Date'
+    }
+    if(endDate.getTime()>new Date()){
+        throw 'End Date should not be greater than Current Date'
+    }
+    // console.log(moment("06/22/2015", "MM/DD/YYYY", true).isValid())
+    for(i=0; i<transList.length;i++){
+        tempDate=transList[i]['date']['MM']+'-'+transList[i]['date']['DD']+'-'+transList[i]['date']['YYYY'];
+        tempDate= new Date(tempDate)
+        if (tempDate>=startDate && tempDate<=endDate){
+            allDates.push({"id":transList[i]['_id'].toString(),"date": tempDate})
+        }
+    }
+    allDates.sort((a,b) => a.date- b.date)
+    finalList=[]
+    for(i=0; i<allDates.length;i++){
+        finalList.push({"id":allDates[i]['id'],"Date":allDates[i]['date'].getMonth()+1+'-'+allDates[i]['date'].getDate()+'-'+allDates[i]['date'].getFullYear()});
+    }
+    return finalList;                     
 }
 
-// async function updateTag(transID, newComment) {
-//   if (!transID || isString(transID) || !newComment)
-//     throw "Please input Valid and non empty Trans Ids and New Comment!";
+//Update Transaction
+async function updateTag(transID, newComment){
+    if(!transID || isString(transID) || !newComment) throw 'Please input Valid and non empty Trans Ids and New Comment!';
+    
+    let objId = ObjectId(transID);
+    const transCollection = await transactions();
+    const found= await transCollection.findOne({_id:objId});
+    if(!found) throw "trans not found";
+    let updatedInfo = await transCollection.updateOne({_id: objId},{$set:{tag:newComment}});
+    if(updatedInfo.modifiedCount === 0) throw "could not update transaction";
 
-//   let objId = ObjectId(transID);
-//   const transCollection = await transactions();
-//   const found = await transCollection.findOne({ _id: objId });
-//   if (!found) throw "trans not found";
-//   let updatedInfo = await transCollection.updateOne(
-//     { _id: objId },
-//     { $set: { tag: newComment } }
-//   );
-//   if (updatedInfo.modifiedCount === 0) throw "could not update transaction";
+    return getTransById(transID);
+}
 
-//   return getTransById(transID);
-// }
+// Delete Transaction
+async function remove(transID){
+  // const transCollection = await transactions();
+  // const found= await getTransById(transID);
+  //const deletionInfo = await transCollection.deleteOne({ _id:ObjectId(transID)});
+  // if (deletionInfo.deletedCount === 0) {
+  //   throw `Could not delete user with id of ${id}`;
+  // }
+  const accountsCollection = await accountsCollections();
 
-//return userId in string
+  const foundAcc = await accountsCollection.findOne({transactions:{$in:[transID]}});
+  console.log(foundAcc['_id'])
+  const updateInfo = await accountsCollection.updateOne(
+    { _id:  foundAcc['_id']},
+    { $pull: { transactions: transID  } }
+  );
+  if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
+      throw 'Update failed';
+
+  return true;
+}
+
+// Return userId in string
 async function getTransById(transID) {
   if (!transID || isString(transID))
     throw "Please input non-empty Transaction ID";
@@ -166,9 +186,9 @@ async function getTransById(transID) {
   const transCollection = await transactions();
   const transact = await transCollection.findOne({ _id: objId });
   if (!transact) throw "trans not found";
-  transact._id = transact._id.toString();
   return transact;
 }
+
 
 async function update(transId, toAccountId, amount, tag, date) {
   if (!transId || isString(transId) || !toAccountId || isString(toAccountId))
@@ -269,6 +289,8 @@ async function update(transId, toAccountId, amount, tag, date) {
   }
 }
 
+
+
 async function getDetails(arr) {
   // TODO error check: arr is type array
   if(!arr) return []  // arr can be empty since if there are no transactions
@@ -357,6 +379,7 @@ module.exports = {
   getFilterTrans,
   // updateTag,
   update,
+  remove,
   getDetails,
   deleteTrans,
   transFilterByMonth

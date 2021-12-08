@@ -671,7 +671,29 @@ router.get('/delete/deposit/:transId', async (req, res) => {
     }
 })
 
-router.get('/delete/transaction/:transId', async (req, res) => {
+// router.get('/delete/transaction/:transId', async (req, res) => {
+
+router.delete('/delete/transaction/:id', async (req, res) => {
+    if (!req.params.id) throw 'You must specify Transaction ID to delete';
+    try {
+        await transData.getTransById(req.params.id);
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ error: 'Transaction not found' });
+      return;
+    }
+    try {
+      await transData.remove(req.params.id);
+      res.status(200).json({"transactionId":req.params.id, "deleted":true});
+    } catch (e) {
+        console.log(e);
+      res.sendStatus(500);
+    }
+});
+
+router.put('/transaction/:transId') // TODO
+
+router.get('/edit/transaction/:transId', async (req, res) => {
     if(req.session.user){
         if(!req.params.transId) {
             res.status(400).render('login/error',{title:'Error', error:'Must supply transaction id',});
