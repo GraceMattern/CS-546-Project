@@ -1,5 +1,5 @@
 <div class="dashboard-header">
-<p>Account ID: {{account._id}}</p> 
+<p id="accountId" title="{{account._id}}">Account ID: {{account._id}}</p> 
 <p>Account type: {{account.accountType}}</p>
 <form action="/profile">
     <button type="submit" class="btn btn-dark">View Profile</button>
@@ -24,8 +24,20 @@
         <br>
 
         <p>Transaction History</p>
+        {{!-- filter by month --}}
+        <p>Filter by month</p>
+        <form id="selectMonth-form">
+            <label for="selectMonth">Date:</label>
+            <input id="selectMonth" type="month" name="selectMonth">
+            <button type="submit" class="btn btn-dark">Submit</button>
+            <button id="showAll" type="button" class="btn btn-dark">All</button>
+        </form>
+
+        <ul id="transList"></ul>
+        <p id="noTrans">View your history by first making a deposit or transaction</p>
+
     {{!-- START: container for history --}}
-     {{#if trans}}
+     {{!-- {{#if trans}}
         <ul>
             {{#each trans}}
                 <li>
@@ -47,7 +59,10 @@
         <button onclick="window.print()">Print this page</button>
     {{else}}
         <p>View your history by first making a deposit or transaction</p>
-    {{/if}}
+    {{/if}} --}}
     {{!-- END: container for history --}}
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+<script src="/public/js/transFilter.js"></script>

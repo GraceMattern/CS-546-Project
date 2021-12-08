@@ -760,4 +760,43 @@ router.post('/transfer', async (req, res) => {
     }
 })
 
+router.get('/transactions/:accountId', async (req, res) => {
+    if(!req.params.accountId) {
+        res.status(400).render('login/error',{title:'Error', error:'Must supply account id',});
+        return;
+    }
+    if (typeof req.params.accountId != "string") {
+        res.status(400).render('login/error',{title:'Error', error:'Account id must be a string',});
+        return;
+    }
+    if (req.params.accountId.trim().length == 0) {
+        res.status(400).render('login/error',{title:'Error', error:'Account id cannot be an empty string',});
+        return;
+    }
+
+    try {
+        const account = await accountData.getAccount(req.params.accountId);
+        const allTrans = await transData.getDetails(account.transactions)
+        res.status(200).json(allTrans);
+    } catch (e) {
+        res.status(400).render('login/error',{title:'Error', error:`${e}`});
+    }
+})
+
+//Filter
+router.get('/transFilter/:accountId/:selectMonth', async (req, res) => {
+    if(!req.params.accountId || !req.params.selectMonth){
+        res.redirect('/dashboard/' + req.params.accountId);
+    }
+    var date = req.params.selectMonth.split('-');
+    var YYYY = date[0];
+    var MM = date[1];
+    try {
+        const transactions = await transData.transFilterByMonth(req.params.accountId, YYYY, MM);
+        res.status(200).json(transactions);
+    } catch (error) {
+        res.status(400).json({message: error});
+    }
+})
+
 module.exports = router;

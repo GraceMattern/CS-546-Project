@@ -131,7 +131,7 @@ label {
 .dashboard-container{
     padding:2%;
     border:2px solid black;
-    width:40%;
+    width:60%;
     border-radius:5px;
     display: inline-block;
 }
