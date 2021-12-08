@@ -135,41 +135,41 @@ async function getFilterTrans(fromDate,toDate){
     return finalList;                     
 }
 
-//Update Transaction
-async function updateTag(transID, newComment){
-    if(!transID || isString(transID) || !newComment) throw 'Please input Valid and non empty Trans Ids and New Comment!';
+//Update tag
+// async function updateTag(transID, newComment){
+//     if(!transID || isString(transID) || !newComment) throw 'Please input Valid and non empty Trans Ids and New Comment!';
     
-    let objId = ObjectId(transID);
-    const transCollection = await transactions();
-    const found= await transCollection.findOne({_id:objId});
-    if(!found) throw "trans not found";
-    let updatedInfo = await transCollection.updateOne({_id: objId},{$set:{tag:newComment}});
-    if(updatedInfo.modifiedCount === 0) throw "could not update transaction";
+//     let objId = ObjectId(transID);
+//     const transCollection = await transactions();
+//     const found= await transCollection.findOne({_id:objId});
+//     if(!found) throw "trans not found";
+//     let updatedInfo = await transCollection.updateOne({_id: objId},{$set:{tag:newComment}});
+//     if(updatedInfo.modifiedCount === 0) throw "could not update transaction";
 
-    return getTransById(transID);
-}
+//     return getTransById(transID);
+// }
 
 // Delete Transaction
-async function remove(transID){
-  // const transCollection = await transactions();
-  // const found= await getTransById(transID);
-  //const deletionInfo = await transCollection.deleteOne({ _id:ObjectId(transID)});
-  // if (deletionInfo.deletedCount === 0) {
-  //   throw `Could not delete user with id of ${id}`;
-  // }
-  const accountsCollection = await accountsCollections();
+// async function remove(transID){
+//   // const transCollection = await transactions();
+//   // const found= await getTransById(transID);
+//   //const deletionInfo = await transCollection.deleteOne({ _id:ObjectId(transID)});
+//   // if (deletionInfo.deletedCount === 0) {
+//   //   throw `Could not delete user with id of ${id}`;
+//   // }
+//   const accountsCollection = await accountsCollections();
 
-  const foundAcc = await accountsCollection.findOne({transactions:{$in:[transID]}});
-  console.log(foundAcc['_id'])
-  const updateInfo = await accountsCollection.updateOne(
-    { _id:  foundAcc['_id']},
-    { $pull: { transactions: transID  } }
-  );
-  if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
-      throw 'Update failed';
+//   const foundAcc = await accountsCollection.findOne({transactions:{$in:[transID]}});
+//   console.log(foundAcc['_id'])
+//   const updateInfo = await accountsCollection.updateOne(
+//     { _id:  foundAcc['_id']},
+//     { $pull: { transactions: transID  } }
+//   );
+//   if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
+//       throw 'Update failed';
 
-  return true;
-}
+//   return true;
+// }
 
 // Return userId in string
 async function getTransById(transID) {
@@ -186,6 +186,7 @@ async function getTransById(transID) {
   const transCollection = await transactions();
   const transact = await transCollection.findOne({ _id: objId });
   if (!transact) throw "trans not found";
+  transact._id = transact._id.toString();
   return transact;
 }
 
@@ -379,7 +380,7 @@ module.exports = {
   getFilterTrans,
   // updateTag,
   update,
-  remove,
+  // remove,
   getDetails,
   deleteTrans,
   transFilterByMonth
