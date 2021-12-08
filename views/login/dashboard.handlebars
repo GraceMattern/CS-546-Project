@@ -1,4 +1,5 @@
 <div class="dashboard-header">
+<p>Hello {{user.firstName}} {{user.lastName}}</p>
 <p id="accountId" title="{{account._id}}">Account ID: {{account._id}}</p> 
 <p>Account type: {{account.accountType}}</p>
 <form action="/profile">
@@ -23,7 +24,6 @@
         </form>
         <br>
 
-        <p>Transaction History</p>
         {{!-- filter by month --}}
         <p>Filter by month</p>
         <form id="selectMonth-form">
@@ -33,6 +33,7 @@
             <button id="showAll" type="button" class="btn btn-dark">All</button>
         </form>
 
+        <p>Transaction History</p>
         <ul id="transList"></ul>
         <p id="noTrans">View your history by first making a deposit or transaction</p>
 

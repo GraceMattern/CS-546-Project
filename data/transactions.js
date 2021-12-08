@@ -224,7 +224,7 @@ async function update(transId, toAccountId, amount, tag, date) {
       { _id: objId },
       { $set: {transAmount: parseFloat(amount), tag: tag, date: {MM: parseInt(date.substring(5,7)), DD: parseInt(date.substring(8,10)), YYYY: parseInt(date.substring(0,4))} }}
     );
-    if (updatedFrom.modifiedCount === 0) throw "could not update transaction";
+    // if (updatedFrom.modifiedCount === 0) throw "could not update transaction";
 
     let accCollect = await accountsCollections();
     let accountId = await accounts.getAccountByTransId(transId.toString());
@@ -242,7 +242,7 @@ async function update(transId, toAccountId, amount, tag, date) {
       { _id: accountId },
       { $set: { balance:  foundTo["balance"] } }
     );
-    if (updatedTo.modifiedCount === 0) throw "could not update balance";
+    // if (updatedTo.modifiedCount === 0) throw "could not update balance";
     // createTrans(accountId, toAccountId, amount);
     // return await accounts.getAccount(accountId);
     return await this.getTransById(transId)
@@ -265,7 +265,7 @@ async function update(transId, toAccountId, amount, tag, date) {
       { _id: objId },
       { $set: {transAmount: parseFloat(amount), tag: tag, date: {MM: parseInt(date.substring(5,7)), DD: parseInt(date.substring(8,10)), YYYY: parseInt(date.substring(0,4))} }}
     );
-    if (updatedFrom.modifiedCount === 0) throw "could not update transaction";
+    // if (updatedFrom.modifiedCount === 0) throw "could not update transaction";
 
     let accCollect = await accountsCollections();
     let accountId = await accounts.getAccountByTransId(transId.toString());
@@ -283,7 +283,7 @@ async function update(transId, toAccountId, amount, tag, date) {
       { _id: accountId },
       { $set: { balance:  foundTo["balance"] } }
     );
-    if (updatedTo.modifiedCount === 0) throw "could not update balance";
+    // if (updatedTo.modifiedCount === 0) throw "could not update balance";
     // createTrans(accountId, accountId, amount);
     // return await accounts.getAccount(accountId);
     return await this.getTransById(transId)

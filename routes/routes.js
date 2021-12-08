@@ -367,8 +367,8 @@ router.get('/dashboard/:id', async (req, res) => {
         try {
             const account = await accountData.getAccount(req.params.id);
             const allTrans = await transData.getDetails(account.transactions)
-            res.status(200).render('login/dashboard', {title:`Dashboard`, account: account, trans: allTrans})
-            // res.status(200).render('login/dashboard', {title:`Dashboard`});
+            const user = await userData.getUserById(account.userId.toString())
+            res.status(200).render('login/dashboard', {title:`Dashboard`, account: account, trans: allTrans, user: user})
         } catch (e) {
             res.status(400).render('login/error',{title:'Error', error:`${e}`});
         }
@@ -416,7 +416,8 @@ router.post('/dashboard/:acctId', async (req, res) => {
             const newDeposit = await transData.createTrans(req.session.user._id, req.params.acctId,"internal_deposit",xss(req.body.deposit), xss(req.body.tag));
             const myAcct = await accountData.getAccount(req.params.acctId);
             const allTrans = await transData.getDetails(myAcct.transactions)
-            res.status(200).render('login/dashboard', {title:'Dashboard', account: myAcct, trans: allTrans})
+            const user = await userData.getUserById(myAcct.userId.toString())
+            res.status(200).render('login/dashboard', {title:'Dashboard', account: myAcct, trans: allTrans, user: user})
         } catch (e) {
             res.render('login/error',{title:'Error', error: `Could not add deposit`});
             // res.render('login/error',{title:'Error', error: `${e}`});
@@ -443,7 +444,8 @@ router.post('/dashboard/:acctId', async (req, res) => {
             const newTrans = await transData.createTrans(req.session.user._id, req.params.acctId,"external_transaction",xss(req.body.transaction), xss(req.body.tag));
             const myAcct = await accountData.getAccount(req.params.acctId);
             const allTrans = await transData.getDetails(myAcct.transactions)
-            res.status(200).render('login/dashboard', {title:'Dashboard', account: myAcct, trans: allTrans})
+            const user = await userData.getUserById(myAcct.userId.toString())
+            res.status(200).render('login/dashboard', {title:'Dashboard', account: myAcct, trans: allTrans, user: user})
         } catch (e) {
             res.render('login/error',{title:'Error', error: `${e}`});
         }
@@ -602,9 +604,11 @@ router.post('/edit/:transId', async (req, res) => {
             const accountId = await accountData.getAccountByTransId(req.params.transId.toString())
             const myAcct = await accountData.getAccount(accountId.toString());
             const allTrans = await transData.getDetails(myAcct.transactions)
-            res.status(200).render('login/dashboard', {title:'Dashboard', account: myAcct, trans: allTrans})
+            const user = await userData.getUserById(myAcct.userId.toString())
+            res.status(200).render('login/dashboard', {title:'Dashboard', account: myAcct, trans: allTrans, user: user})
         } catch (e) {
-            res.render('login/error',{title:'Error', error: `Could not edit deposit`});
+            // res.render('login/error',{title:'Error', error: `Could not edit deposit`});
+            res.render('login/error',{title:'Error', error: `${e}`});
         }
     }
     if (req.body.transaction) {
@@ -633,7 +637,8 @@ router.post('/edit/:transId', async (req, res) => {
             const accountId = await accountData.getAccountByTransId(req.params.transId.toString())
             const myAcct = await accountData.getAccount(accountId.toString());
             const allTrans = await transData.getDetails(myAcct.transactions)
-            res.status(200).render('login/dashboard', {title:'Dashboard', account: myAcct, trans: allTrans})
+            const user = await userData.getUserById(myAcct.userId.toString())
+            res.status(200).render('login/dashboard', {title:'Dashboard', account: myAcct, trans: allTrans, user: user})
         } catch (e) {
             res.render('login/error',{title:'Error', error: `Could not edit transaction`});
         }
@@ -662,7 +667,8 @@ router.get('/delete/deposit/:transId', async (req, res) => {
             const deleteTrans = await transData.deleteTrans(req.params.transId.toString(), type="deposit")
             const account = await accountData.getAccount(accountId.toString())
             const allTrans = await transData.getDetails(deleteTrans)
-            res.status(200).render('login/dashboard', {title:`Dashboard`, account: account, trans: allTrans})
+            const user = await userData.getUserById(account.userId.toString())
+            res.status(200).render('login/dashboard', {title:`Dashboard`, account: account, trans: allTrans, user: user})
         } catch (e) {
             res.status(400).render('login/error',{title:'Error', error:`${e}`});
         }
@@ -693,7 +699,8 @@ router.get('/edit/transaction/:transId', async (req, res) => {
             const deleteTrans = await transData.deleteTrans(req.params.transId.toString(), type="transaction") // TESTING RN
             const account = await accountData.getAccount(accountId.toString())
             const allTrans = await transData.getDetails(deleteTrans)
-            res.status(200).render('login/dashboard', {title:`Dashboard`, account: account, trans: allTrans})
+            const user = await userData.getUserById(account.userId.toString())
+            res.status(200).render('login/dashboard', {title:`Dashboard`, account: account, trans: allTrans, user: user})
         } catch (e) {
             res.status(400).render('login/error',{title:'Error', error:`${e}`});
         }
