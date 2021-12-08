@@ -45,8 +45,10 @@ router.post('/login', async (req,res) => {
 
     // cannot check if bank is the domain since we are not creating a user 
 
-    if (/([a-zA-Z0-9]+)([\_\.\-{1}])?([a-zA-Z0-9]+)\@([a-zA-Z0-9]+)([\.])com/.test(userInfo.username.trim()) == false) {
-        res.status(400).render('login/login', {title: `Login`, warning: "You must provide a valid email address \n• Starts with an alphanumeric character \n• Can contain underscores (_), dashes (-), or periods (.) \n• Username ends with an alphanumeric character \n• Domain name follows after at symbol (@) \n• Domain name is any alphanermic character(s) followed by .com",  });
+    if (/([a-zA-Z0-9]+)([\_\.\-{1}])?([a-zA-Z0-9]+)\@([a-zA-Z0-9]+)([\.])com/i.test(userInfo.username.toLowerCase().trim()) == false) {
+        res.status(400).render('login/login', {title: `Login`, warning: "You must provide a valid email address" });
+        console.log(userInfo)
+        return;
     }
    
     if (!userInfo.password || typeof userInfo.password != 'string' || userInfo.password.trim().length === 0) {
@@ -68,8 +70,8 @@ router.post('/login', async (req,res) => {
     // check user
     const userCollection = await users();
     try {
-        const valid = await userData.checkUser(xss(req.body.username).toLowerCase(), xss(req.body.password));
-        let newUser = await userCollection.findOne({username: xss(req.body.username)});
+        const valid = await userData.checkUser(xss(req.body.username.toLowerCase()).toLowerCase(), xss(req.body.password));
+        let newUser = await userCollection.findOne({username: xss(req.body.username.toLowerCase().toLowerCase())});
         req.session.user = newUser;
         res.redirect('/profile');
     } catch (e) {
@@ -130,8 +132,8 @@ router.post('/signup', async (req,res)=>{
         res.status(400).render('login/signup', {title: `Sign up`, warning: `Email domain is not the same as the bank provider followed by .com`});
         return;
     }
-    if(/([a-zA-Z0-9]+)([\_\.\-{1}])?([a-zA-Z0-9]+)\@([a-zA-Z0-9]+)([\.])com/.test(userInfo.email.trim()) == false) {
-        res.status(400).render('login/signup', {title: `Sign up`, warning: "You must provide a valid email address \n• Starts with an alphanumeric character \n• Can contain underscores (_), dashes (-), or periods (.) \n• Username ends with an alphanumeric character \n• Domain name follows after at symbol (@) \n• Domain name is any alphanermic character(s) followed by .com"});
+    if(/([a-zA-Z0-9]+)([\_\.\-{1}])?([a-zA-Z0-9]+)\@([a-zA-Z0-9]+)([\.])com/i.test(userInfo.email.toLowerCase().trim()) == false) {
+        res.status(400).render('login/signup', {title: `Sign up`, warning: "You must provide a valid email address "});
         return;
     }
 
@@ -238,7 +240,7 @@ router.get('/delete/accounts/:acctId', async (req, res) => {
         try {
             const deleteAcct = await accountData.removeAccount(req.params.acctId)
             const user = await userData.getUserById(req.session.user._id)
-            res.status(200).render('login/profile', {title:`User Profile`, user: user, accts: user, authenticated: true, user:req.session.user})
+            res.status(200).render('login/profile', {title:`User Profile`, user: user, accts: user, authenticated: true})
         } catch (e) {
             res.status(400).render('login/error',{title:'Error', error:`${e}`, authenticated: true, user:req.session.user});
         }
@@ -324,8 +326,8 @@ router.post('/edit/user/:id', async (req, res) => {
             res.status(400).render('login/user', {title: `Edit User`, warning: `Email domain is not the same as the bank provider followed by .com`, authenticated: true, user:req.session.user});
             return;
         }
-        if(/([a-zA-Z0-9]+)([\_\.\-{1}])?([a-zA-Z0-9]+)\@([a-zA-Z0-9]+)([\.])com/.test(userInfo.email.trim()) == false) {
-            res.status(400).render('login/user', {title: `Edit User`, warning: "You must provide a valid email address \n• Starts with an alphanumeric character \n• Can contain underscores (_), dashes (-), or periods (.) \n• Username ends with an alphanumeric character \n• Domain name follows after at symbol (@) \n• Domain name is any alphanermic character(s) followed by .com", authenticated: true, user:req.session.user});
+        if(/([a-zA-Z0-9]+)([\_\.\-{1}])?([a-zA-Z0-9]+)\@([a-zA-Z0-9]+)([\.])com/i.test(userInfo.email.toLowerCase().trim()) == false) {
+            res.status(400).render('login/user', {title: `Edit User`, warning: "You must provide a valid email address" , authenticated: true, user:req.session.user});
             return;
         }
 
@@ -355,7 +357,7 @@ router.post('/edit/user/:id', async (req, res) => {
             const allAcct = await userData.getUserById(req.session.user._id)
             res.status(200).render('login/profile', {title: 'User Profile', user: updateUser, accts: allAcct, authenticated: true})
         } catch (e) {
-            res.status(404).render('login/error', {title: 'Edit User', error:`could not load`, authenticated: true, user:req.session.user})
+            res.status(404).render('login/error', {title: 'Edit User', error:`${e}`, authenticated: true, user:req.session.user})
         }
     } else {
         res.render('login/error',{title:'Error', error:'Please login',});
@@ -701,15 +703,15 @@ router.get('/delete/deposit/:transId', async (req, res) => {
 router.get('/delete/transaction/:transId', async (req, res) => {
     if(req.session.user){
         if(!req.params.transId) {
-            res.status(400).render('login/error',{title:'Error', error:'Must supply transaction id',});
+            res.status(400).render('login/error',{title:'Error', error:'Must supply transaction id', authenticated: true, user:req.session.user});
             return;
         }
         if (typeof req.params.transId != "string") {
-            res.status(400).render('login/error',{title:'Error', error:'transaction id must be a string',});
+            res.status(400).render('login/error',{title:'Error', error:'transaction id must be a string', authenticated: true, user:req.session.user});
             return;
         }
         if (req.params.transId.trim().length == 0) {
-            res.status(400).render('login/error',{title:'Error', error:'transaction id cannot be an empty string',});
+            res.status(400).render('login/error',{title:'Error', error:'transaction id cannot be an empty string', authenticated: true, user:req.session.user});
             return;
         }
 
@@ -720,14 +722,13 @@ router.get('/delete/transaction/:transId', async (req, res) => {
             const deleteTrans = await transData.deleteTrans(req.params.transId.toString(), type="transaction")
             const account = await accountData.getAccount(accountId.toString())
             const allTrans = await transData.getDetails(deleteTrans)
-            res.status(200).render('login/dashboard', {title:`Dashboard`, account: account, trans: allTrans})
+            res.status(200).render('login/dashboard', {title:`Dashboard`, account: account, trans: allTrans,authenticated: true, user:req.session.user})
         } catch (e) {
-            res.status(400).render('login/error',{title:'Error', error:`${e}`});
+            res.status(400).render('login/error',{title:'Error', error:`${e}`, authenticated: true, user:req.session.user});
         }
     }else{
         res.render('login/error',{title:'Error', error:'Please login',});
     }
-
 });
 
 
