@@ -12,10 +12,10 @@
             $('#noTrans').hide();
             var title = `<tr>
                             <td>Amount</td>
-                            <td>date</td>
-                            <td>tag</td>
-                            <td>type</td>
-                            <td>operate</td>
+                            <td>Date</td>
+                            <td>Tag</td>
+                            <td>Type</td>
+                            <td>Options</td>
                         </tr>`
             $('#transList').append(title);
             for (var i = 0; i < newElement.length; i++){

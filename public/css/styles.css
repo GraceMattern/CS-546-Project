@@ -22,8 +22,37 @@ main {
   padding-right: 35px;
 }
 
+h1 {
+	font-size: 2rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+}
+
+h3 {
+	font-size: 1.35rem;
+}
+
+h4 {
+	font-size: 1.25rem;
+}
+
+h5 {
+	font-size: 1.15rem;
+}
+
+h6 {
+	font-size: 1.05rem;
+}
+
+p {
+	font-size: 1rem;
+}
+
 a {
-    color: #0072ee;
+    /* color: #0072ee; */
+    color: #006be0;
 }
 
 #navbar-img {
@@ -36,13 +65,28 @@ a {
 }
 
 .centerBalance {
-  line-height: 120%;
+  line-height: 150%;
   text-align: center;
 }
 
 #balance {
   font-weight: bolder;
   font-size: 4em;
+}
+/* 
+.leftAlign {
+	float: left;
+  text-align: left;
+} */
+.rightAlign {
+  display: block;
+  margin: 10px;
+}
+
+.rightAlign span {
+  display: block;
+  margin-right: 10px;
+  font-size: 3.5em;
 }
 
 .btn-primary {
@@ -54,8 +98,17 @@ a {
 }
 
 .dashboard-header {
+  padding-bottom:5%;
+}
+
+#printBtn {
+  text-align: center;
+  padding-top: 10%;
+}
+
+#showAllRight {
   text-align: right;
-  padding:2%;
+  padding: auto;
 }
 
 @media only screen and (max-width: 700px) {
