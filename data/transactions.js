@@ -363,6 +363,11 @@ async function deleteTrans(transId, type) {
 
 //Filter by month, year and accountId
 async function transFilterByMonth(accountId, YYYY, MM, sort) {
+  if(!accountId || !YYYY || !MM || !sort) throw "please enter accountId, year, month, sort way";
+  isString(accountId);
+  isString(YYYY);
+  isString(MM);
+  isString(sort);
   const transactionCollection = await transactions();
   sort = parseInt(sort);
   if(sort == 0){
@@ -385,6 +390,10 @@ async function transFilterByMonth(accountId, YYYY, MM, sort) {
 
 //Filter by tag and accountId
 async function transFilterByTag(accountId, selectTag, sort) {
+  if(!accountId || !selectTag || !sort) throw "please enter accountId, tag, sort way";
+  isString(accountId);
+  isString(selectTag);
+  isString(sort);
   const transactionCollection = await transactions();
   sort = parseInt(sort);
   if(sort == 0){
@@ -406,6 +415,10 @@ async function transFilterByTag(accountId, selectTag, sort) {
 
 //Filter by type(toAccountId) and accountId
 async function transFilterByType(accountId, selectType, sort) {
+  if(!accountId || !selectType || !sort) throw "please enter accountId, Type, sort way";
+  isString(accountId);
+  isString(selectType);
+  isString(sort);
   const transactionCollection = await transactions();
   sort = parseInt(sort);
   if(sort == 0){
@@ -424,6 +437,61 @@ async function transFilterByType(accountId, selectType, sort) {
   }
 }
 
+//Trend compare with last month by tag
+async function trendByTag(accountId, thisMonth, YYYY, tag){
+  if(!accountId || !thisMonth || !YYYY || !tag) throw "please enter accountId, month and tag";
+  isString(accountId);
+  isString(tag);
+
+  if(thisMonth == 1){
+    var lastMonth = 12;
+  }
+  else{
+    var lastMonth = thisMonth - 1;
+  }
+  const transactionCollection = await transactions();
+  
+  const lastMonthTransactionList = await transactionCollection.find({
+    "accountId": accountId,
+    "date.YYYY": YYYY,
+    "date.MM": lastMonth,
+    "tag": tag
+  }).toArray();
+  
+  var lastAmount = 0;
+  var lastListLength = lastMonthTransactionList.length;
+  if(lastListLength != 0){
+    for(let i = 0; i < lastListLength; i++){
+      lastAmount += lastMonthTransactionList[i].transAmount;
+    }
+  }
+
+  const thisMonthTransactionList = await transactionCollection.find({
+    "accountId": accountId,
+    "date.YYYY": YYYY,
+    "date.MM": thisMonth,
+    "tag": tag
+  }).toArray();
+  var thisAmount = 0;
+  var thisListLength = thisMonthTransactionList.length;
+  if(thisListLength != 0){
+    for(let i = 0; i < thisListLength; i++){
+      thisAmount += thisMonthTransactionList[i].transAmount;
+    }
+  }
+  var trend = 0;
+  if(lastAmount == 0 && thisAmount != 0){trend = 1}
+  if(lastAmount != 0 && thisAmount == 0){trend = -1}
+  if(lastAmount != 0 && thisAmount != 0){trend = thisAmount / lastAmount}
+  var result = {
+    "lastAmount": lastAmount,
+    "thisAmount": thisAmount,
+    "trend": parseFloat(trend.toFixed(2))
+  }
+
+  return result;
+}
+
 
 module.exports = {
   createTrans,
@@ -437,5 +505,6 @@ module.exports = {
   deleteTrans,
   transFilterByMonth,
   transFilterByTag,
-  transFilterByType
+  transFilterByType,
+  trendByTag
 };

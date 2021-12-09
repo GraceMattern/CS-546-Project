@@ -895,4 +895,22 @@ router.get('/transFilterByType/:accountId/:selectType/:sort', async (req, res) =
     }
 })
 
+//Trend compared with last month by tag
+router.get('/trendByTag/:accountId/:tag', async (req, res) => {
+    if(!req.params.accountId || !req.params.tag){
+        res.redirect('/dashboard/' + req.params.accountId);
+    }
+    var accountId = req.params.accountId;
+    var tag = req.params.tag;
+    var myDate = new Date();
+    var YYYY = myDate.getFullYear();
+    var thisMonth = myDate.getMonth() + 1; 
+    try {
+        const result = await transData.trendByTag(accountId, thisMonth, YYYY, tag);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(400).json({message: error});
+    }
+})
+
 module.exports = router;

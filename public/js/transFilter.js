@@ -57,6 +57,7 @@
     $.ajax(requestConfig).then(function(responseMassage){
         var newElement = $(responseMassage);
         showList(newElement);
+        $('#trend').hide();
     })
 
     //Filter by month
@@ -134,4 +135,40 @@
             showList(newElement);
         })
     })
+
+    //Trend by tag
+    function trendByTag(accountId, tag) {
+        var requestConfig = {
+            method: 'GET',
+            url: 'http://localhost:3000/trendByTag/'+accountId+"/"+tag
+        }
+        $.ajax(requestConfig).then(function(responseMassage){
+            var result = $(responseMassage);
+            console.log(result)
+            //show result
+            $('#trend').show();
+            $('#trend').empty();
+            var lastMonth = `<li>
+                                The amount last month you spent in ${tag} is ${result[0].lastAmount}.
+                            </li>`;
+            var thisMonth = `<li>
+                                The amount this month you spent in ${tag} is ${result[0].thisAmount}.
+                            </li>`;
+            var trend = `<li>
+                            The trend is ${result[0].trend * 100}%
+                        </li>`
+            $('#trend').append(lastMonth);
+            $('#trend').append(thisMonth);
+            $('#trend').append(trend);
+        })
+    }
+    $('#trend-form').submit((event) => {
+        event.preventDefault();
+
+        if($('#trendTag').val().trim()){
+            $('#trend').empty();
+            trendByTag($('#accountId').attr('title'), $('#trendTag').val());
+        }
+    })
+
 })(window.jQuery);

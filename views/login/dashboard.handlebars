@@ -30,7 +30,7 @@
         </form>
         <br>
 
-        <p>Transaction History</p>
+        <h5>Transaction History</h5>
         <button id="showAll" type="button" class="btn btn-dark">Show all</button>
         {{!-- filter by month --}}
         <form id="selectMonth-form">
@@ -97,6 +97,25 @@
         <table id="transList" border="1"></table>
         <button id="print" onclick="window.print()">Print this page</button>
         <p id="noTrans">View your history by first making a deposit or transaction</p>
+        
+        <div>
+            <h5>Trend</h5>
+            <p>Select the tag you want to compare with last month</p>
+            <form id="trend-form">
+                <label for="trendTag">Tag:</label>
+                <select id="trendTag" name="trendTag">
+                    <option value="food">Food</option>
+                    <option value="goods and services">Goods and Services</option>
+                    <option value="transport">Transport</option>
+                    <option value="utilities">Utilities</option>
+                    <option value="investment">Investment</option>
+                    <option value="salary">Salary</option>
+                    <option value="other">Other</option>
+                </select>
+                <button type="submit" class="btn btn-dark">Submit</button>
+            </form>
+            <ul id="trend"></ul>
+        </div>
 
     </div>
 </div>
