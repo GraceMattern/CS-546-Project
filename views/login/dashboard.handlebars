@@ -24,16 +24,30 @@
         <br>
 
         <p>Transaction History</p>
+        <button id="showAll" type="button" class="btn btn-dark">Show all</button>
         {{!-- filter by month --}}
-        <p>Filter by month</p>
         <form id="selectMonth-form">
-            <label for="selectMonth">Date:</label>
+            <label for="selectMonth">Select by date:</label>
             <input id="selectMonth" type="month" name="selectMonth">
             <button type="submit" class="btn btn-dark">Submit</button>
-            <button id="showAll" type="button" class="btn btn-dark">All</button>
         </form>
 
-        <ul id="transList"></ul>
+        <form id="selectTag-form">
+            <label for="selectTag">Select by tag:</label>
+            <select id="selectTag" name="selectTag">
+                <option value="food">Food</option>
+                <option value="goods and services">Goods and Services</option>
+                <option value="transport">Transport</option>
+                <option value="utilities">Utilities</option>
+                <option value="investment">Investment</option>
+                <option value="salary">Salary</option>
+                <option value="other">Other</option>
+            </select>
+            <button type="submit" class="btn btn-dark">Submit</button>
+        </form>
+
+        <table id="transList" border="1"></table>
+        <button id="print" onclick="window.print()">Print this page</button>
         <p id="noTrans">View your history by first making a deposit or transaction</p>
 
     {{!-- START: container for history --}}

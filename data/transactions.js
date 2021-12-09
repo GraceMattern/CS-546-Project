@@ -361,12 +361,24 @@ async function deleteTrans(transId, type) {
    return accountInfo.transactions
 }
 
-async function transFilterByMonth(accountId,YYYY, MM) {
+//Filter by month, year and accountId
+async function transFilterByMonth(accountId, YYYY, MM) {
   const transactionCollection = await transactions();
   const transactionList = await transactionCollection.find({
       "accountId": accountId,
       "date.YYYY": parseInt(YYYY),
       "date.MM": parseInt(MM),
+  }).toArray();
+
+  return transactionList;
+}
+
+//Filter by tag and accountId
+async function transFilterByTag(accountId, selectTag) {
+  const transactionCollection = await transactions();
+  const transactionList = await transactionCollection.find({
+      "accountId": accountId,
+      "tag": selectTag,
   }).toArray();
 
   return transactionList;
@@ -383,5 +395,6 @@ module.exports = {
   // remove,
   getDetails,
   deleteTrans,
-  transFilterByMonth
+  transFilterByMonth,
+  transFilterByTag
 };

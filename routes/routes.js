@@ -783,8 +783,8 @@ router.get('/transactions/:accountId', async (req, res) => {
     }
 })
 
-//Filter
-router.get('/transFilter/:accountId/:selectMonth', async (req, res) => {
+//Filter by month, year and accountId
+router.get('/transFilterByMonth/:accountId/:selectMonth', async (req, res) => {
     if(!req.params.accountId || !req.params.selectMonth){
         res.redirect('/dashboard/' + req.params.accountId);
     }
@@ -793,6 +793,21 @@ router.get('/transFilter/:accountId/:selectMonth', async (req, res) => {
     var MM = date[1];
     try {
         const transactions = await transData.transFilterByMonth(req.params.accountId, YYYY, MM);
+        res.status(200).json(transactions);
+    } catch (error) {
+        res.status(400).json({message: error});
+    }
+})
+
+//Filter by tag and accountId
+router.get('/transFilterByTag/:accountId/:selectTag', async (req, res) => {
+    if(!req.params.accountId || !req.params.selectTag){
+        res.redirect('/dashboard/' + req.params.accountId);
+    }
+    var accountId = req.params.accountId;
+    var selectTag = req.params.selectTag;
+    try {
+        const transactions = await transData.transFilterByTag(accountId, selectTag);
         res.status(200).json(transactions);
     } catch (error) {
         res.status(400).json({message: error});
