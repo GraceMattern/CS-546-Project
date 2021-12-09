@@ -850,15 +850,15 @@ router.get('/transactions/:accountId', async (req, res) => {
 })
 
 //Filter by month, year and accountId
-router.get('/transFilterByMonth/:accountId/:selectMonth', async (req, res) => {
-    if(!req.params.accountId || !req.params.selectMonth){
+router.get('/transFilterByMonth/:accountId/:selectMonth/:sort', async (req, res) => {
+    if(!req.params.accountId || !req.params.selectMonth || !req.params.sort){
         res.redirect('/dashboard/' + req.params.accountId);
     }
     var date = req.params.selectMonth.split('-');
     var YYYY = date[0];
     var MM = date[1];
     try {
-        const transactions = await transData.transFilterByMonth(req.params.accountId, YYYY, MM);
+        const transactions = await transData.transFilterByMonth(req.params.accountId, YYYY, MM, req.params.sort);
         res.status(200).json(transactions);
     } catch (error) {
         res.status(400).json({message: error});
@@ -866,14 +866,14 @@ router.get('/transFilterByMonth/:accountId/:selectMonth', async (req, res) => {
 })
 
 //Filter by tag and accountId
-router.get('/transFilterByTag/:accountId/:selectTag', async (req, res) => {
-    if(!req.params.accountId || !req.params.selectTag){
+router.get('/transFilterByTag/:accountId/:selectTag/:sort', async (req, res) => {
+    if(!req.params.accountId || !req.params.selectTag || !req.params.sort){
         res.redirect('/dashboard/' + req.params.accountId);
     }
     var accountId = req.params.accountId;
     var selectTag = req.params.selectTag;
     try {
-        const transactions = await transData.transFilterByTag(accountId, selectTag);
+        const transactions = await transData.transFilterByTag(accountId, selectTag, req.params.sort);
         res.status(200).json(transactions);
     } catch (error) {
         res.status(400).json({message: error});
@@ -881,14 +881,14 @@ router.get('/transFilterByTag/:accountId/:selectTag', async (req, res) => {
 })
 
 //Filter by type(toAccountId) and accountId
-router.get('/transFilterByType/:accountId/:selectType', async (req, res) => {
-    if(!req.params.accountId || !req.params.selectType){
+router.get('/transFilterByType/:accountId/:selectType/:sort', async (req, res) => {
+    if(!req.params.accountId || !req.params.selectType || !req.params.sort){
         res.redirect('/dashboard/' + req.params.accountId);
     }
     var accountId = req.params.accountId;
     var selectType = req.params.selectType;
     try {
-        const transactions = await transData.transFilterByType(accountId, selectType);
+        const transactions = await transData.transFilterByType(accountId, selectType, req.params.sort);
         res.status(200).json(transactions);
     } catch (error) {
         res.status(400).json({message: error});

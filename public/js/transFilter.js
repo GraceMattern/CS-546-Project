@@ -60,10 +60,10 @@
     })
 
     //Filter by month
-    function transFilterByMonth(accountId,selectMonth) {
+    function transFilterByMonth(accountId, selectMonth, sort) {
         var requestConfig = {
             method: 'GET',
-            url: 'http://localhost:3000/transFilterByMonth/'+accountId+"/"+selectMonth
+            url: 'http://localhost:3000/transFilterByMonth/'+accountId+"/"+selectMonth+"/"+sort
         }
         $.ajax(requestConfig).then(function(responseMassage){
             var newElement = $(responseMassage);
@@ -72,17 +72,18 @@
     }
     $('#selectMonth-form').submit((event) => {
         event.preventDefault();
+        
         if($('#selectMonth').val().trim()){
             $('#transList').empty();
-            transFilterByMonth($('#accountId').attr('title'), $('#selectMonth').val());
+            transFilterByMonth($('#accountId').attr('title'), $('#selectMonth').val(), $("input[name='monthSort']:checked").val());
         }
     })
 
     //Filter by tag
-    function transFilterByTag(accountId,selectTag) {
+    function transFilterByTag(accountId, selectTag, sort) {
         var requestConfig = {
             method: 'GET',
-            url: 'http://localhost:3000/transFilterByTag/'+accountId+"/"+selectTag
+            url: 'http://localhost:3000/transFilterByTag/'+accountId+"/"+selectTag+"/"+sort
         }
         $.ajax(requestConfig).then(function(responseMassage){
             var newElement = $(responseMassage);
@@ -94,16 +95,16 @@
 
         if($('#selectTag').val().trim()){
             $('#transList').empty();
-            transFilterByTag($('#accountId').attr('title'), $('#selectTag').val());
+            transFilterByTag($('#accountId').attr('title'), $('#selectTag').val(), $("input[name='tagSort']:checked").val());
             
         }
     })
     
     //Filter by type(external_transaction or internal_deposit)
-    function transFilterByType(accountId,selectType) {
+    function transFilterByType(accountId,selectType, sort) {
         var requestConfig = {
             method: 'GET',
-            url: 'http://localhost:3000/transFilterByType/'+accountId+"/"+selectType
+            url: 'http://localhost:3000/transFilterByType/'+accountId+"/"+selectType+"/"+sort
         }
         $.ajax(requestConfig).then(function(responseMassage){
             var newElement = $(responseMassage);
@@ -115,7 +116,7 @@
 
         if($('#selectType').val().trim()){
             $('#transList').empty();
-            transFilterByType($('#accountId').attr('title'), $('#selectType').val());
+            transFilterByType($('#accountId').attr('title'), $('#selectType').val(), $("input[name='typeSort']:checked").val());
             
         }
     })

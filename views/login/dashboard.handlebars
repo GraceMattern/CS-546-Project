@@ -36,6 +36,16 @@
         <form id="selectMonth-form">
             <label for="selectMonth">Select by date:</label>
             <input id="selectMonth" type="month" name="selectMonth">
+            Sort by amount:
+            <input id="month-ascending" type="radio" name="monthSort" value="1">
+            <label for="month-ascending">ascending</label>
+            
+            <input id="month-descending"type="radio" name="monthSort" value="-1">
+            <label for="month-descending">descending</label>
+            
+            <input id="month-no-sort" type="radio" checked="checked" name="monthSort" value="0">
+            <label for="month-no-sort">no-sort</label>
+
             <button type="submit" class="btn btn-dark">Submit</button>
         </form>
          {{!-- filter by tag --}}
@@ -50,6 +60,17 @@
                 <option value="salary">Salary</option>
                 <option value="other">Other</option>
             </select>
+
+            Sort by amount:
+            <input id="tag-ascending" type="radio" name="tagSort" value="1">
+            <label for="tag-ascending">ascending</label>
+            
+            <input id="tag-descending"type="radio" name="tagSort" value="-1">
+            <label for="tag-descending">descending</label>
+            
+            <input id="tag-no-sort" type="radio" checked="checked" name="tagSort" value="0">
+            <label for="month-no-sort">no-sort</label>
+
             <button type="submit" class="btn btn-dark">Submit</button>
         </form>
         {{!-- filter by type --}}
@@ -59,6 +80,17 @@
                 <option value="internal_deposit">income</option>
                 <option value="external_transaction">expense</option>
             </select>
+
+            Sort by amount:
+            <input id="type-ascending" type="radio" name="typeSort" value="1">
+            <label for="type-ascending">ascending</label>
+            
+            <input id="type-descending"type="radio" name="typeSort" value="-1">
+            <label for="type-descending">descending</label>
+            
+            <input id="type-no-sort" type="radio" checked="checked" name="typeSort" value="0">
+            <label for="type-no-sort">no-sort</label>
+
             <button type="submit" class="btn btn-dark">Submit</button>
         </form>
 
