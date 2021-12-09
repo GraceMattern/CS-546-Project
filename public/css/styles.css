@@ -4,156 +4,60 @@
 
 html,
 body {
-	font-size: 14pt;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-	/* background: #dedede; */
-	font-family: Helvetica, Arial, sans-serif, serif;
-    background: #7F7FD5;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+  background: #fff;
 }
 
 main {
 	max-width: 75%;
 	margin: auto;
-    padding-top: 35px;
-    padding-bottom: 70px;
-    padding-left: 0px;
-    padding-right: 35px;
-}
-
-header {
-    border-bottom: 1px solid #afafaf;
-}
-
-footer {
-    width: 100%;
-    text-align: center;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	color: #222;
-	margin-bottom: 5px;
-}
-
-h1 {
-	font-size: 2rem;
-}
-
-h2 {
-	font-size: 1.5rem;
-}
-
-h3 {
-	font-size: 1.35rem;
-}
-
-h4 {
-	font-size: 1.25rem;
-}
-
-h5 {
-	font-size: 1.15rem;
-}
-
-h6 {
-	font-size: 1.05rem;
-}
-
-p {
-	font-size: 1rem;
+  padding-top: 35px;
+  padding-bottom: 70px;
+  padding-left: 0px;
+  padding-right: 35px;
 }
 
 a {
     color: #0072ee;
 }
 
-label {
-	font-weight: bold;
-}
-
-.headerContent > img,
-.headerContent > p {
-    display: inline-block;
-}
-#companyName {
-    font-size: 200%;
-    font-weight: bolder;
-}
-
-#logoImg {
-    width: 70px;
-    height: 70px;
+#navbar-img {
+    width: 3em;
+    height: 3em;
 }
 
 .error {
     color: red;
 }
 
-
-/* ==============================================BIG BREAK */
-
-
-#body-box{
-    display:flex;
-    justify-content:space-around;
-    flex-wrap:wrap;
-}
-#body-box2{
-    display:flex;
-    justify-content:space-around;
-    flex-wrap:wrap;
+.centerBalance {
+  line-height: 120%;
+  text-align: center;
 }
 
-.container{
-    padding:2%;
-    border:2px solid black;
-    width:40%;
-    border-radius:5px;
-}
-.profile-container{
-    margin:5%;
-    padding:2%;
-    border:2px solid black;
-    width:40%;
-    border-radius:5px;
-    display: inline-block;
+#balance {
+  font-weight: bolder;
+  font-size: 4em;
 }
 
-.dashboard-container{
-    padding:2%;
-    border:2px solid black;
-    width:60%;
-    border-radius:5px;
-    display: inline-block;
+.btn-primary {
+  background-color: #0072ee;
 }
 
-.dashboard-header {
-    text-align: right;
-    padding:2%;
-}
-
-
-.brief {
-    padding-left: 100px;
-    padding-right: 100px;
-    padding-top: 50px;
-    padding-bottom: 50px;
+.btnContainer {
+  text-align: right;
 }
 
 @media only screen and (max-width: 700px) {
-    .container{
-        width:100%;
-    }
-    .profile-container{
-        height:400px;
-    }
+  .container{
+      width:100%;
+  }
+  .profile-container{
+      height:400px;
+  }
 }

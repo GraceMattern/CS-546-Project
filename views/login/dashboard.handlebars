@@ -1,10 +1,14 @@
 <div class="dashboard-header">
+<p>{{user.firstName}} {{user.lastName}}</p>
 <p id="accountId" title="{{account._id}}">Account ID: {{account._id}}</p> 
 <p>Account type: {{account.accountType}}</p>
-<form action="/profile">
+{{!-- <form action="/profile">
     <button type="submit" class="btn btn-dark">View Profile</button>
 </form>
 <br>
+<form action="/logout">
+        <button type="submit" class="btn btn-dark">Logout</button>
+    </form> --}}
 </div>
 
 
@@ -12,7 +16,10 @@
     <div class="dashboard-container">
         <h1>{{title}}</h1>
         
-        <p>Balance: {{account.balance}}</p>
+        <div class="centerBalance">
+            <p id="balance">${{account.balance}}</p>
+            <p>Balance</p>
+        </div>
 
         <form action='/deposit/{{account._id}}'>
             <button type="submit" class="btn btn-dark">Make a deposit</button>
