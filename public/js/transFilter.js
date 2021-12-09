@@ -14,7 +14,7 @@
                             <td>Amount</td>
                             <td>date</td>
                             <td>tag</td>
-                            <td>income/expense</td>
+                            <td>type</td>
                             <td>operate</td>
                         </tr>`
             $('#transList').append(title);
@@ -98,7 +98,29 @@
             
         }
     })
+    
+    //Filter by type(external_transaction or internal_deposit)
+    function transFilterByType(accountId,selectType) {
+        var requestConfig = {
+            method: 'GET',
+            url: 'http://localhost:3000/transFilterByType/'+accountId+"/"+selectType
+        }
+        $.ajax(requestConfig).then(function(responseMassage){
+            var newElement = $(responseMassage);
+            showList(newElement);
+        })
+    }
+    $('#selectType-form').submit((event) => {
+        event.preventDefault();
 
+        if($('#selectType').val().trim()){
+            $('#transList').empty();
+            transFilterByType($('#accountId').attr('title'), $('#selectType').val());
+            
+        }
+    })
+
+    //Show all transactions
     $('#showAll').click(function(event){
         event.preventDefault();
         $('#transList').empty();

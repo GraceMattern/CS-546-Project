@@ -880,4 +880,19 @@ router.get('/transFilterByTag/:accountId/:selectTag', async (req, res) => {
     }
 })
 
+//Filter by type(toAccountId) and accountId
+router.get('/transFilterByType/:accountId/:selectType', async (req, res) => {
+    if(!req.params.accountId || !req.params.selectType){
+        res.redirect('/dashboard/' + req.params.accountId);
+    }
+    var accountId = req.params.accountId;
+    var selectType = req.params.selectType;
+    try {
+        const transactions = await transData.transFilterByType(accountId, selectType);
+        res.status(200).json(transactions);
+    } catch (error) {
+        res.status(400).json({message: error});
+    }
+})
+
 module.exports = router;

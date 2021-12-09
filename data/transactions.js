@@ -384,6 +384,17 @@ async function transFilterByTag(accountId, selectTag) {
   return transactionList;
 }
 
+//Filter by type(toAccountId) and accountId
+async function transFilterByType(accountId, selectType) {
+  const transactionCollection = await transactions();
+  const transactionList = await transactionCollection.find({
+      "accountId": accountId,
+      "toAccountId": selectType,
+  }).toArray();
+
+  return transactionList;
+}
+
 
 module.exports = {
   createTrans,
@@ -396,5 +407,6 @@ module.exports = {
   getDetails,
   deleteTrans,
   transFilterByMonth,
-  transFilterByTag
+  transFilterByTag,
+  transFilterByType
 };
