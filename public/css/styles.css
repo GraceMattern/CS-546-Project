@@ -53,6 +53,11 @@ a {
   text-align: right;
 }
 
+.dashboard-header {
+  text-align: right;
+  padding:2%;
+}
+
 @media only screen and (max-width: 700px) {
   .container{
       width:100%;

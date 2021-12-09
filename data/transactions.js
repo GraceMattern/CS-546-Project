@@ -27,7 +27,7 @@ async function createTrans(userId, accountId, toAccountId, amount, tag) {
     accountId: accountId,
     userId: userId,
     toAccountId: toAccountId,
-    transAmount: parseFloat(amount),
+    transAmount: parseFloat(amount).toFixed(2),
     date: {
       MM: CurrDate.getMonth() + 1,
       DD: CurrDate.getDate(),
@@ -50,7 +50,7 @@ async function createTrans(userId, accountId, toAccountId, amount, tag) {
   if (!found) throw "The Account does not exists!";
   found["transactions"].push(newId);
   if (toAccountId == "internal_deposit") { // deposit
-    found.balance = parseFloat(found.balance) + parseFloat(amount);
+    found.balance = (parseFloat(found.balance) + parseFloat(amount)).toFixed(2);
     delete found._id; 
     let parsedId;
     try {
@@ -68,8 +68,8 @@ async function createTrans(userId, accountId, toAccountId, amount, tag) {
     return transResult;
   }
   if (toAccountId == "external_transaction") { // transaction
-    if (found.balance < amount) throw `You have insuffient funds to make this transaction`
-    found.balance = parseFloat(found.balance) -  parseFloat(amount);
+    if (parseFloat(found.balance) < parseFloat(amount)) throw `You have insuffient funds to make this transaction`
+    found.balance = (parseFloat(found.balance) -  parseFloat(amount)).toFixed(2);
     delete found._id; 
     let parsedId;
     try {
@@ -236,7 +236,7 @@ async function update(transId, toAccountId, amount, tag, date) {
     }
     let foundTo = await accCollect.findOne({ _id: accountId });
     if (!foundTo) throw "account not found";
-    foundTo["balance"] = parseFloat(foundTo["balance"]) - (parseFloat(oldAmount) -  parseFloat(amount));
+    foundTo["balance"] = (parseFloat(foundTo["balance"]) - (parseFloat(oldAmount) -  parseFloat(amount))).toFixed(2);
 
     let updatedTo = await accCollect.updateOne(
       { _id: accountId },
@@ -277,7 +277,7 @@ async function update(transId, toAccountId, amount, tag, date) {
     }
     let foundTo = await accCollect.findOne({ _id: accountId });
     if (!foundTo) throw "account not found";
-    foundTo["balance"] = parseFloat(foundTo["balance"]) + (parseFloat(oldAmount) -  parseFloat(amount));
+    foundTo["balance"] = (parseFloat(foundTo["balance"]) + (parseFloat(oldAmount) -  parseFloat(amount))).toFixed(2);
 
     let updatedTo = await accCollect.updateOne(
       { _id: accountId },
@@ -333,10 +333,10 @@ async function deleteTrans(transId, type) {
      if (i==length-1) throw `no account with that transaction id`
    }
    if (type == "deposit") {
-      accountInfo.balance = parseFloat(accountInfo.balance) - parseFloat(transaction.transAmount)
+      accountInfo.balance = (parseFloat(accountInfo.balance) - parseFloat(transaction.transAmount)).toFixed(2);
    }
    if (type == "transaction") {
-      accountInfo.balance = parseFloat(accountInfo.balance) + parseFloat(transaction.transAmount)
+      accountInfo.balance = (parseFloat(accountInfo.balance) + parseFloat(transaction.transAmount)).toFixed(2);
    }
    delete accountInfo._id;
    let ObjAcctId;
@@ -442,6 +442,7 @@ async function trendByTag(accountId, thisMonth, YYYY, tag){
   if(!accountId || !thisMonth || !YYYY || !tag) throw "please enter accountId, month and tag";
   isString(accountId);
   isString(tag);
+  // if (thisMonth > 12 || thisMonth < 1) throw `must provide valid numerical month number`
 
   if(thisMonth == 1){
     var lastMonth = 12;
@@ -479,10 +480,7 @@ async function trendByTag(accountId, thisMonth, YYYY, tag){
       thisAmount += thisMonthTransactionList[i].transAmount;
     }
   }
-  var trend = 0;
-  if(lastAmount == 0 && thisAmount != 0){trend = 1}
-  if(lastAmount != 0 && thisAmount == 0){trend = -1}
-  if(lastAmount != 0 && thisAmount != 0){trend = thisAmount / lastAmount}
+  var trend = (thisAmount-lastAmount)/lastAmount;
   var result = {
     "lastAmount": lastAmount,
     "thisAmount": thisAmount,
