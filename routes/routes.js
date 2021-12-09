@@ -13,7 +13,7 @@ router.get('/', async (req,res) => {
         const allAcct = await userData.getUserById(req.session.user._id)
         res.status(200).render('login/profile',{title:'User Profile',user:req.session.user, accts: allAcct, authenticated: true});
     }else{
-        res.render('login/landing');
+        res.status(200).render('login/landing');
     }
 });
 
@@ -22,7 +22,7 @@ router.get('/login', async (req,res) => {
         const allAcct = await userData.getUserById(req.session.user._id)
         res.status(200).render('login/profile',{title:'User Profile',user:req.session.user, accts: allAcct, authenticated: true});
     }else{
-        res.render('login/login',{title:'Login'});
+        res.status(200).render('login/login',{title:'Login'});
     }
 });
 
@@ -83,7 +83,7 @@ router.get('/signup', async (req,res) =>{
     if(req.session.user)
         res.redirect('/profile');
     else
-        res.render('login/signup',{title:'Sign up', user:req.session.user});
+        res.status(200).render('login/signup',{title:'Sign up', user:req.session.user});
 });
 
 router.post('/signup', async (req,res)=>{
@@ -170,9 +170,9 @@ router.post('/signup', async (req,res)=>{
 router.get('/profile', async (req,res) => { 
     if(req.session.user){
         const allAcct = await userData.getUserById(req.session.user._id)
-        res.render('login/profile',{title:'User Profile',user:req.session.user, accts: allAcct, authenticated: true });
+        res.status(200).render('login/profile',{title:'User Profile',user:req.session.user, accts: allAcct, authenticated: true });
     }else{
-        res.render('login/error',{title:'Error', error:'Please login'});
+        res.status(400).render('login/error',{title:'Error', error:'Please login'});
     }
 });
 
@@ -196,16 +196,16 @@ router.post('/profile', async (req, res) => {
             const allAcct = await userData.getUserById(req.session.user._id)
             res.status(200).render('login/profile', {title:'User Profile', user: req.session.user, accts: allAcct, authenticated: true, user:req.session.user})
         } catch (e) {
-            res.render('login/error',{title:'Error', error: `Could not add account`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/error',{title:'Error', error: `Could not add account`, authenticated: true, user:req.session.user});
         }
     } else {
-        res.render('login/error',{title:'Error', error:'Please login'});
+        res.status(400).render('login/error',{title:'Error', error:'Please login'});
     }
 })
 
 router.get('/logout', async (req,res) => {
     req.session.destroy();
-    res.render('login/logout', {title:'Logout'});
+    res.status(200).render('login/logout', {title:'Logout'});
 });
 
 router.get('/accounts', async (req, res) => {
@@ -216,7 +216,7 @@ router.get('/accounts', async (req, res) => {
             res.status(400).render('login/error',{title:'Error', error:'Could not load', authenticated: true, user:req.session.user});
         }
     }else{
-        res.render('login/error',{title:'Error', error:'Please login'});
+        res.status(400).render('login/error',{title:'Error', error:'Please login'});
     }
 })
 
@@ -245,7 +245,7 @@ router.get('/delete/accounts/:acctId', async (req, res) => {
             res.status(400).render('login/error',{title:'Error', error:`${e}`, authenticated: true, user:req.session.user});
         }
     }else{
-        res.render('login/error',{title:'Error', error:'Please login',});
+        res.status(400).render('login/error',{title:'Error', error:'Please login',});
     }
 })
 
@@ -267,7 +267,7 @@ router.get('/edit/user/:id', async (req,res) => {
             res.status(404).render('login/error', {title: 'Edit User Profile', error:`No user with that id`, authenticated: true, user:req.session.user})
         }  
     } else {
-        res.render('login/error',{title:'Error', error:'Please login',});
+        res.status(400).render('login/error',{title:'Error', error:'Please login',});
     }
 })
 
@@ -360,7 +360,7 @@ router.post('/edit/user/:id', async (req, res) => {
             res.status(404).render('login/error', {title: 'Edit User', error:`${e}`, authenticated: true, user:req.session.user})
         }
     } else {
-        res.render('login/error',{title:'Error', error:'Please login',});
+        res.status(400).render('login/error',{title:'Error', error:'Please login',});
     }
 }) 
 
@@ -390,7 +390,7 @@ router.get('/dashboard/:id', async (req, res) => {
             res.status(400).render('login/error',{title:'Error', error:`${e}`, authenticated: true, user:req.session.user});
         }
     }else{
-        res.render('login/error',{title:'Error', error:'Please login',});
+        res.status(400).render('login/error',{title:'Error', error:'Please login',});
     }
 })
 
@@ -437,7 +437,7 @@ router.post('/dashboard/:acctId', async (req, res) => {
                 const user = await userData.getUserById(myAcct.userId.toString())
                 res.status(200).render('login/dashboard', {title:'Dashboard', account: myAcct, trans: allTrans, user: user, authenticated: true})
             } catch (e) {
-                res.render('login/error',{title:'Error', error: `Could not add deposit`, authenticated: true, user:req.session.user});
+                res.status(400).render('login/error',{title:'Error', error: `Could not add deposit`, authenticated: true, user:req.session.user});
             }
         }
         if (req.body.transaction) {
@@ -464,11 +464,11 @@ router.post('/dashboard/:acctId', async (req, res) => {
                 const user = await userData.getUserById(myAcct.userId.toString())
                 res.status(200).render('login/dashboard', {title:'Dashboard', account: myAcct, trans: allTrans, user: user, authenticated: true})
             } catch (e) {
-                res.render('login/error',{title:'Error', error: `${e}`,  authenticated: true, user:req.session.user});
+                res.status(400).render('login/error',{title:'Error', error: `${e}`,  authenticated: true, user:req.session.user});
             }
         }
     } else {
-        res.render('login/error',{title:'Error', error:'Please login'});
+        res.status(400).render('login/error',{title:'Error', error:'Please login'});
     }
 })
 
@@ -495,7 +495,7 @@ router.get('/deposit/:acctId', async (req, res) => {
             res.status(400).render('login/error',{title:'Error', error:'Could not load', authenticated: true, user:req.session.user});
         }
     }else{
-        res.render('login/error',{title:'Error', error:'Please login',});
+        res.status(400).render('login/error',{title:'Error', error:'Please login',});
     }
 })
 
@@ -522,7 +522,7 @@ router.get('/transaction/:acctId', async (req, res) => {
             res.status(400).render('login/error',{title:'Error', error:'Could not load',  authenticated: true, user:req.session.user});
         }
     }else{
-        res.render('login/error',{title:'Error', error:'Please login',});
+        res.status(400).render('login/error',{title:'Error', error:'Please login',});
     }
 })
 
@@ -549,7 +549,7 @@ router.get('/edit/transaction/:transId', async (req, res) => {
             res.status(400).render('login/error',{title:'Error', error:'Could not load',  authenticated: true, user:req.session.user});
         }
     }else{
-        res.render('login/error',{title:'Error', error:'Please login',});
+        res.status(400).render('login/error',{title:'Error', error:'Please login',});
     }
 })
 
@@ -576,7 +576,7 @@ router.get('/edit/deposit/:transId', async (req, res) => {
             res.status(400).render('login/error',{title:'Error', error:'Could not load',  authenticated: true, user:req.session.user});
         }
     }else{
-        res.render('login/error',{title:'Error', error:'Please login',});
+        res.status(400).render('login/error',{title:'Error', error:'Please login',});
     }
 })
 
@@ -627,7 +627,7 @@ router.post('/edit/:transId', async (req, res) => {
                 const user = await userData.getUserById(myAcct.userId.toString())
                 res.status(200).render('login/dashboard', {title:'Dashboard', account: myAcct, trans: allTrans, user: user, authenticated: true})
             } catch (e) {
-                res.render('login/error',{title:'Error', error: `Could not edit deposit`, authenticated: true, user:req.session.user});
+                res.status(400).render('login/error',{title:'Error', error: `Could not edit deposit`, authenticated: true, user:req.session.user});
             }
         }
         if (req.body.transaction) {
@@ -659,11 +659,11 @@ router.post('/edit/:transId', async (req, res) => {
                 const user = await userData.getUserById(myAcct.userId.toString())
                 res.status(200).render('login/dashboard', {title:'Dashboard', account: myAcct, trans: allTrans, user: user, authenticated: true})
             } catch (e) {
-                res.render('login/error',{title:'Error', error: `Could not edit transaction`, authenticated: true, user:req.session.user});
+                res.status(400).render('login/error',{title:'Error', error: `Could not edit transaction`, authenticated: true, user:req.session.user});
             }
         }
     } else {
-        res.render('login/error',{title:'Error', error:'Please login'});
+        res.status(400).render('login/error',{title:'Error', error:'Please login'});
     }
 }) 
 
@@ -695,7 +695,7 @@ router.get('/delete/deposit/:transId', async (req, res) => {
             res.status(400).render('login/error',{title:'Error', error:`${e}`, authenticated: true, user:req.session.user});
         }
     }else{
-        res.render('login/error',{title:'Error', error:'Please login',});
+        res.status(400).render('login/error',{title:'Error', error:'Please login',});
     }
 })
 
@@ -727,7 +727,7 @@ router.get('/delete/transaction/:transId', async (req, res) => {
             res.status(400).render('login/error',{title:'Error', error:`${e}`, authenticated: true, user:req.session.user});
         }
     }else{
-        res.render('login/error',{title:'Error', error:'Please login',});
+        res.status(400).render('login/error',{title:'Error', error:'Please login',});
     }
 });
 
@@ -760,7 +760,7 @@ router.get('/edit/transaction/:transId', async (req, res) => {
             res.status(400).render('login/error',{title:'Error', error:`${e}`, authenticated: true, user:req.session.user});
         }
     }else{
-        res.render('login/error',{title:'Error', error:'Please login',});
+        res.status(400).render('login/error',{title:'Error', error:'Please login',});
     }
 })
 
@@ -770,10 +770,10 @@ router.get('/transfer', async (req, res) => {
             const user = await userData.getUserById(req.session.user._id);
             res.status(200).render('login/transfer',{title:'Transfer', accts: user.accounts, authenticated: true, user:req.session.user});
         } catch (e) {
-            res.status(200).render('login/transfer',{title:'Transfer', warning:'Could not transfer', authenticated: true, user:req.session.user});
+            res.status(400).render('login/transfer',{title:'Transfer', warning:'Could not transfer', authenticated: true, user:req.session.user});
         }
     } else {
-        res.render('login/error',{title:'Error', error:'Please login',});
+        res.status(400).render('login/error',{title:'Error', error:'Please login',});
     }
 })
 
@@ -813,12 +813,12 @@ router.post('/transfer', async (req, res) => {
             const transferFrom = await transData.createTrans(req.session.user._id,xss(req.body.from), "external_transaction", xss(req.body.amount), "other")
             const transferTo = await transData.createTrans(req.session.user._id, xss(req.body.to), "internal_deposit", xss(req.body.amount), "other")
             const allAcct = await userData.getUserById(req.session.user._id)
-            res.render('login/profile',{title:'User Profile',user:req.session.user, accts: allAcct , authenticated: true, user:req.session.user});
+            res.status(200).render('login/profile',{title:'User Profile',user:req.session.user, accts: allAcct , authenticated: true, user:req.session.user});
         } catch (e) {
-            res.render('login/error',{title:'Error', error: `Could not make transfer`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/error',{title:'Error', error: `Could not make transfer`, authenticated: true, user:req.session.user});
         }
     } else {
-        res.render('login/error',{title:'Error', error:'Please login',});
+        res.status(400).render('login/error',{title:'Error', error:'Please login',});
     }
 })
 
@@ -845,7 +845,7 @@ router.get('/transactions/:accountId', async (req, res) => {
             res.status(400).render('login/error',{title:'Error', error:`${e}`, authenticated: true, user:req.session.user});
         }
     } else {
-        res.render('login/error',{title:'Error', error:'Please login'});
+        res.status(400).render('login/error',{title:'Error', error:'Please login'});
     }
 })
 
@@ -865,7 +865,7 @@ router.get('/transFilter/:accountId/:selectMonth', async (req, res) => {
             res.status(400).json({message: error});
         }
     } else {
-        res.render('login/error',{title:'Error', error:'Please login'});
+        res.status(400).render('login/error',{title:'Error', error:'Please login'});
     }
 })
 
