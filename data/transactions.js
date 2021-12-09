@@ -361,15 +361,67 @@ async function deleteTrans(transId, type) {
    return accountInfo.transactions
 }
 
-async function transFilterByMonth(accountId,YYYY, MM) {
+//Filter by month, year and accountId
+async function transFilterByMonth(accountId, YYYY, MM, sort) {
   const transactionCollection = await transactions();
-  const transactionList = await transactionCollection.find({
+  sort = parseInt(sort);
+  if(sort == 0){
+    const transactionList = await transactionCollection.find({
       "accountId": accountId,
       "date.YYYY": parseInt(YYYY),
       "date.MM": parseInt(MM),
-  }).toArray();
+    }).toArray();
+    return transactionList;
+  }
+  else{
+    const transactionList = await transactionCollection.find({
+      "accountId": accountId,
+      "date.YYYY": parseInt(YYYY),
+      "date.MM": parseInt(MM),
+    }).sort({"transAmount": sort}).toArray();
+    return transactionList;
+  }
+}
 
+//Filter by tag and accountId
+async function transFilterByTag(accountId, selectTag, sort) {
+  const transactionCollection = await transactions();
+  sort = parseInt(sort);
+  if(sort == 0){
+    const transactionList = await transactionCollection.find({
+      "accountId": accountId,
+      "tag": selectTag,
+    }).toArray();
+    return transactionList;
+  }
+  else{
+    const transactionList = await transactionCollection.find({
+      "accountId": accountId,
+      "tag": selectTag,
+    }).sort({"transAmount": sort}).toArray();
+    return transactionList;
+  }
+  
+}
+
+//Filter by type(toAccountId) and accountId
+async function transFilterByType(accountId, selectType, sort) {
+  const transactionCollection = await transactions();
+  sort = parseInt(sort);
+  if(sort == 0){
+    const transactionList = await transactionCollection.find({
+      "accountId": accountId,
+      "toAccountId": selectType,
+  }).toArray();
   return transactionList;
+  }
+  else{
+    const transactionList = await transactionCollection.find({
+      "accountId": accountId,
+      "toAccountId": selectType,
+    }).sort({"transAmount": sort}).toArray();
+    return transactionList;
+  }
 }
 
 
@@ -383,5 +435,7 @@ module.exports = {
   // remove,
   getDetails,
   deleteTrans,
-  transFilterByMonth
+  transFilterByMonth,
+  transFilterByTag,
+  transFilterByType
 };
