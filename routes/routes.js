@@ -221,6 +221,18 @@ router.get('/accounts', async (req, res) => {
 })
 
 router.get('/delete/accounts/:acctId', async (req, res) => {
+    let isAuth = false;
+    let myUser = await userData.getUserById(req.session.user._id);
+    for (let i =0; i< myUser.accounts.length; i++) {
+        if(myUser.accounts[i] == req.params.acctId) {
+            isAuth = true;
+        }
+    }
+    if (!isAuth) {
+            res.status(400).render('login/error', {title: `User  Profile`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+            return;
+    }
+
     if(req.session.user){
         if(!req.params.acctId) {
             res.status(400).render('login/error',{title:'Error', error:'Must supply transaction id', authenticated: true, user:req.session.user});
@@ -251,20 +263,20 @@ router.get('/delete/accounts/:acctId', async (req, res) => {
 
 router.get('/edit/user/:id', async (req,res) => { 
     if (req.session.user) {
-        if(!req.params.id) {
-            res.status(400).render('login/error', {title: `Edit Profile`, error: `You must supply an id to get user by Id`, authenticated: true, user:req.session.user});
+        if(req.params.id != req.session.user._id) {
+            res.status(400).render('login/error', {title: `Edit Profile`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
             return;
         }
-        if(req.params.id != req.session.user._id) {
-            res.status(400).render('login/error', {title: `Edit Profile`, error: `You must supply your id`, authenticated: true, user:req.session.user}); // TODO this prob should be implemented in every function where applicable
+        if(!req.params.id) {
+            res.status(400).render('login/error', {title: `Edit Profile`, error: `You must supply an id to get user by Id`, authenticated: true, user:req.session.user});
             return;
         }
         // getUserById
         try {
             let user = await userData.getUserById(req.params.id); // so you cant enter other peoples ids
-            res.status(200).render(`login/user`, {title: 'Edit User Profile', userId: req.params.id, authenticated: true, user:req.session.user});
+            res.status(200).render(`login/user`, {title: 'Edit Profile', userId: req.params.id, authenticated: true, user:req.session.user});
         } catch (e) {
-            res.status(404).render('login/error', {title: 'Edit User Profile', error:`No user with that id`, authenticated: true, user:req.session.user})
+            res.status(404).render('login/error', {title: 'Edit Profile', error:`No user with that id`, authenticated: true, user:req.session.user})
         }  
     } else {
         res.status(400).render('login/error',{title:'Error', error:'Please login',});
@@ -274,42 +286,42 @@ router.get('/edit/user/:id', async (req,res) => {
 router.post('/edit/user/:id', async (req, res) => { 
     if (req.session.user) {
         if(req.params.id != req.session.user._id) {
-            res.status(400).render('login/error', {title: `Edit Profile`, error: `You must supply your id`, authenticated: true, user:req.session.user}); // TODO this prob should be implemented in every function where applicable
+            res.status(400).render('login/error', {title: `Edit Profile`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
             return;
         }
         let userInfo = req.body;
         if (!userInfo) {
-            res.status(400).render('login/user', {title: `Edit User`, warning: `You must fill out the entire form`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/user', {title: `Edit Profile`, warning: `You must fill out the entire form`, authenticated: true, user:req.session.user});
             return;
         }
 
         if (!userInfo.firstName || typeof userInfo.firstName != 'string' || userInfo.firstName.trim().length === 0) {
-            res.status(400).render('login/user', {title: `Edit User`, warning: `You must provide a first name`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/user', {title: `Edit Profile`, warning: `You must provide a first name`, authenticated: true, user:req.session.user});
             return;
         }
 
         if (!userInfo.lastName || typeof userInfo.lastName != 'string' || userInfo.lastName.trim().length === 0) {
-            res.status(400).render('login/user', {title: `Edit User`, warning: `You must provide a last name`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/user', {title: `Edit Profile`, warning: `You must provide a last name`, authenticated: true, user:req.session.user});
             return;
         }
 
         if (!userInfo.bank || typeof userInfo.bank != 'string' || userInfo.bank.trim().length === 0) {
-            res.status(400).render('login/user', {title: `Edit User`, warning: `You must provide a bank`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/user', {title: `Edit Profile`, warning: `You must provide a bank`, authenticated: true, user:req.session.user});
             return;
         }
 
         if (!userInfo.email || typeof userInfo.email != 'string' || userInfo.email.trim().length === 0) {
-            res.status(400).render('login/user', {title: `Edit User`, warning: `You must provide an email`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/user', {title: `Edit Profile`, warning: `You must provide an email`, authenticated: true, user:req.session.user});
             return;
         }
 
         if (!userInfo.password || typeof userInfo.password != 'string' || userInfo.password.trim().length === 0) {
-            res.status(400).render('login/user', {title: `Edit User`, warning: `You must provide a password`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/user', {title: `Edit Profile`, warning: `You must provide a password`, authenticated: true, user:req.session.user});
             return;
         }
 
         if ((!userInfo.age && parseInt(userInfo.age) != 0) || typeof parseInt(userInfo.age) != 'number' || parseInt(userInfo.age) < 18) {
-            res.status(400).render('login/user', {title: `Edit User`, warning: `You must be 18 years or older`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/user', {title: `Edit Profile`, warning: `You must be 18 years or older`, authenticated: true, user:req.session.user});
             return;
         }
         if(!req.params.id) {
@@ -319,26 +331,26 @@ router.post('/edit/user/:id', async (req, res) => {
         
         // format checking
         if (userInfo.email.toLowerCase().trim() != userInfo.email.toLowerCase().trim().replace(/\s+/g, '')) {
-            res.status(400).render('login/user', {title: `Edit User`, warning: `Email cannot have spaces`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/user', {title: `Edit Profile`, warning: `Email cannot have spaces`, authenticated: true, user:req.session.user});
             return;
         }
         if (userInfo.email.trim().split("@")[1].toLowerCase() != `${userInfo.bank.trim().toLowerCase().replace(/\s/g,'')}.com`) {
-            res.status(400).render('login/user', {title: `Edit User`, warning: `Email domain is not the same as the bank provider followed by .com`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/user', {title: `Edit Profile`, warning: `Email domain is not the same as the bank provider followed by .com`, authenticated: true, user:req.session.user});
             return;
         }
         if(/([a-zA-Z0-9]+)([\_\.\-{1}])?([a-zA-Z0-9]+)\@([a-zA-Z0-9]+)([\.])com/i.test(userInfo.email.toLowerCase().trim()) == false) {
-            res.status(400).render('login/user', {title: `Edit User`, warning: "You must provide a valid email address" , authenticated: true, user:req.session.user});
+            res.status(400).render('login/user', {title: `Edit Profile`, warning: "You must provide a valid email address" , authenticated: true, user:req.session.user});
             return;
         }
 
         if(userInfo.password.toLowerCase().trim() != userInfo.password.toLowerCase().trim().replace(/\s+/g, '')) {
-            res.status(400).render('login/user', {title: `Edit User`, warning: `Password cannot contain spaces`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/user', {title: `Edit Profile`, warning: `Password cannot contain spaces`, authenticated: true, user:req.session.user});
             return;
         }
 
         let strippedPassword = userInfo.password.toLowerCase().trim().replace(/\s+/g, '');
         if (strippedPassword.length < 6) {
-            res.status(400).render('login/user', {title: `Edit User`, warning: `Password must be at least six characters`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/user', {title: `Edit Profile`, warning: `Password must be at least six characters`, authenticated: true, user:req.session.user});
             return;
         }
 
@@ -357,7 +369,7 @@ router.post('/edit/user/:id', async (req, res) => {
             const allAcct = await userData.getUserById(req.session.user._id)
             res.status(200).render('login/profile', {title: 'User Profile', user: updateUser, accts: allAcct, authenticated: true})
         } catch (e) {
-            res.status(404).render('login/error', {title: 'Edit User', error:`${e}`, authenticated: true, user:req.session.user})
+            res.status(404).render('login/error', {title: 'Edit Profile', error:`${e}`, authenticated: true, user:req.session.user})
         }
     } else {
         res.status(400).render('login/error',{title:'Error', error:'Please login',});
@@ -365,6 +377,17 @@ router.post('/edit/user/:id', async (req, res) => {
 }) 
 
 router.get('/dashboard/:id', async (req, res) => {
+    let isAuth = false;
+    let myUser = await userData.getUserById(req.session.user._id);
+    for (let i =0; i< myUser.accounts.length; i++) {
+        if(myUser.accounts[i] == req.params.id) {
+            isAuth = true;
+        }
+    }
+    if (!isAuth) {
+            res.status(400).render('login/error', {title: `Dashboard`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+            return;
+    }
     if(req.session.user){
         if(!req.params.id) {
             res.status(400).render('login/error',{title:'Error', error:'Must supply account id', authenticated: true, user:req.session.user});
@@ -395,6 +418,17 @@ router.get('/dashboard/:id', async (req, res) => {
 })
 
 router.post('/dashboard/:acctId', async (req, res) => {
+    let isAuth = false;
+    let myUser = await userData.getUserById(req.session.user._id);
+    for (let i =0; i< myUser.accounts.length; i++) {
+        if(myUser.accounts[i] == req.params.acctId) {
+            isAuth = true;
+        }
+    }
+    if (!isAuth) {
+            res.status(400).render('login/error', {title: `User  Profile`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+            return;
+    }
     if (req.session.user) {
         if(!req.params.acctId) {
             res.status(400).render('login/error',{title:'Error', error:'Must supply account id', authenticated: true, user:req.session.user});
@@ -473,6 +507,17 @@ router.post('/dashboard/:acctId', async (req, res) => {
 })
 
 router.get('/deposit/:acctId', async (req, res) => {
+    let isAuth = false;
+    let myUser = await userData.getUserById(req.session.user._id);
+    for (let i =0; i< myUser.accounts.length; i++) {
+        if(myUser.accounts[i] == req.params.acctId) {
+            isAuth = true;
+        }
+    }
+    if (!isAuth) {
+            res.status(400).render('login/error', {title: `Make a deposit`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+            return;
+    }
     if(req.session.user){
         if(!req.params.acctId) {
             res.status(400).render('login/error',{title:'Error', error:'Must supply account id',  authenticated: true, user:req.session.user});
@@ -500,6 +545,17 @@ router.get('/deposit/:acctId', async (req, res) => {
 })
 
 router.get('/transaction/:acctId', async (req, res) => {
+    let isAuth = false;
+    let myUser = await userData.getUserById(req.session.user._id);
+    for (let i =0; i< myUser.accounts.length; i++) {
+        if(myUser.accounts[i] == req.params.acctId) {
+            isAuth = true;
+        }
+    }
+    if (!isAuth) {
+            res.status(400).render('login/error', {title: `Make a transaction`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+            return;
+    }
     if(req.session.user){
         if(!req.params.acctId) {
             res.status(400).render('login/error',{title:'Error', error:'Must supply account id',  authenticated: true, user:req.session.user});
@@ -542,6 +598,15 @@ router.get('/edit/transaction/:transId', async (req, res) => {
         }
 
         // TODO do i need to try to mongodb objId check
+        let details = await transData.getDetails([req.params.transId])
+        if (!details) {
+            res.status(400).render('login/error', {title: 'Error', error: 'could not find any transaction with that id', authenticated: true, user: req.session.user});
+            return;
+        }
+        if (req.session.user._id != details[0]['userId']) {
+            res.status(400).render('login/error', {title: 'Edit a transaction', error: `you are not authorized`, authenticated: true, user: req.session.user});
+            return;
+        }
 
         try {
             res.status(200).render('login/edit', {title:`Edit a transaction`, type: "transaction", transId: req.params.transId, acctId: req.params.acctId,  authenticated: true, user:req.session.user})
@@ -569,6 +634,15 @@ router.get('/edit/deposit/:transId', async (req, res) => {
         }
 
         // TODO do i need to try to mongodb objId check
+        let details = await transData.getDetails([req.params.transId])
+        if (!details) {
+            res.status(400).render('login/error', {title: 'Error', error: 'could not find any transaction with that id', authenticated: true, user: req.session.user});
+            return;
+        }
+        if (req.session.user._id != details[0]['userId']) {
+            res.status(400).render('login/error', {title: 'Edit a transaction', error: `you are not authorized`, authenticated: true, user: req.session.user});
+            return;
+        }
 
         try {
             res.status(200).render('login/edit', {title:`Edit a deposit`, type:"deposit", transId: req.params.transId,  authenticated: true, user:req.session.user})
@@ -577,6 +651,16 @@ router.get('/edit/deposit/:transId', async (req, res) => {
         }
     }else{
         res.status(400).render('login/error',{title:'Error', error:'Please login',});
+    }
+})
+
+router.get('/edit/:transId', async (req, res) => {
+    if(req.session.user) {
+        res.status(200).render('login/error', {title: `We do not need a GET route for /edit/:transId`, authenticated: true, user: user.session.user})
+        return
+    } else {
+        res.status(400).render('login/error',{title:'Error', error:'Please login'});
+        return
     }
 })
 
@@ -596,6 +680,15 @@ router.post('/edit/:transId', async (req, res) => {
         }
 
         // TODO error checking more
+        let details = await transData.getDetails([req.params.transId])
+        if (!details) {
+            res.status(400).render('login/error', {title: 'Error', error: 'could not find any transaction with that id', authenticated: true, user: req.session.user});
+            return;
+        }
+        if (req.session.user._id != details[0]['userId']) {
+            res.status(400).render('login/error', {title: 'Edit a transaction', error: `you are not authorized`, authenticated: true, user: req.session.user});
+            return;
+        }
 
         let info = req.body;
         if (req.body.deposit) {
@@ -683,6 +776,15 @@ router.get('/delete/deposit/:transId', async (req, res) => {
         }
 
         // TODO do i need to try to mongodb objId check
+        let details = await transData.getDetails([req.params.transId])
+        if (!details) {
+            res.status(400).render('login/error', {title: 'Error', error: 'could not find any transaction with that id', authenticated: true, user: req.session.user});
+            return;
+        }
+        if (req.session.user._id != details[0]['userId']) {
+            res.status(400).render('login/error', {title: 'Edit a transaction', error: `you are not authorized`, authenticated: true, user: req.session.user});
+            return;
+        }
 
         try {
             const accountId = await accountData.getAccountByTransId(req.params.transId.toString())
@@ -716,6 +818,15 @@ router.get('/delete/transaction/:transId', async (req, res) => {
         }
 
         // TODO do i need to try to mongodb objId check
+        let details = await transData.getDetails([req.params.transId])
+        if (!details) {
+            res.status(400).render('login/error', {title: 'Error', error: 'could not find any transaction with that id', authenticated: true, user: req.session.user});
+            return;
+        }
+        if (req.session.user._id != details[0]['userId']) {
+            res.status(400).render('login/error', {title: 'Edit a transaction', error: `you are not authorized`, authenticated: true, user: req.session.user});
+            return;
+        }
 
         try {
             const accountId = await accountData.getAccountByTransId(req.params.transId.toString())
@@ -748,6 +859,15 @@ router.get('/edit/transaction/:transId', async (req, res) => {
         }
 
         // TODO do i need to try to mongodb objId check
+        let details = await transData.getDetails([req.params.transId])
+        if (!details) {
+            res.status(400).render('login/error', {title: 'Error', error: 'could not find any transaction with that id', authenticated: true, user: req.session.user});
+            return;
+        }
+        if (req.session.user._id != details[0]['userId']) {
+            res.status(400).render('login/error', {title: 'Edit a transaction', error: `you are not authorized`, authenticated: true, user: req.session.user});
+            return;
+        }
 
         try {
             const accountId = await accountData.getAccountByTransId(req.params.transId.toString())
@@ -822,7 +942,18 @@ router.post('/transfer', async (req, res) => {
     }
 })
 
-router.get('/transactions/:accountId', async (req, res) => {
+router.get('/transactions/:accountId', async (req, res) => { // TESTING POINT
+//     let isAuth = false;
+    // let myUser = await userData.getUserById(req.session.user._id);
+    // for (let i =0; i< myUser.accounts.length; i++) {
+    //     if(myUser.accounts[i] == req.params.accountId) {
+    //         isAuth = true;
+    //     }
+    // }
+//     if (!isAuth) {
+//             res.status(400).render('login/error', {title: `Error`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+//             return;
+//     }
     if (req.session.user) {
         if(!req.params.accountId) {
             res.status(400).render('login/error',{title:'Error', error:'Must supply account id', authenticated: true, user:req.session.user});
@@ -857,12 +988,27 @@ router.get('/transFilterByMonth/:accountId/:selectMonth/:sort', async (req, res)
     var date = req.params.selectMonth.split('-');
     var YYYY = date[0];
     var MM = date[1];
+    // let isAuth = false;
+    // let myUser = await userData.getUserById(req.session.user._id);
+    // for (let i =0; i< myUser.accounts.length; i++) {
+    //     if(myUser.accounts[i] == req.params.accountId) {
+    //         isAuth = true;
+    //     }
+    // }
+    // if (!isAuth) {
+    //         res.status(400).render('login/error', {title: `Error`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+    //         return;
+    // }
+    // if (req.session.user) {
     try {
         const transactions = await transData.transFilterByMonth(req.params.accountId, YYYY, MM, req.params.sort);
         res.status(200).json(transactions);
     } catch (error) {
         res.status(400).json({message: error});
     }
+    // } else {
+    //     res.status(400).render('login/error',{title:'Error', error:'Please login'});
+    // }
 })
 
 //Filter by tag and accountId
@@ -872,12 +1018,27 @@ router.get('/transFilterByTag/:accountId/:selectTag/:sort', async (req, res) => 
     }
     var accountId = req.params.accountId;
     var selectTag = req.params.selectTag;
+    // let isAuth = false;
+    // let myUser = await userData.getUserById(req.session.user._id);
+    // for (let i =0; i< myUser.accounts.length; i++) {
+    //     if(myUser.accounts[i] == req.params.accountId) {
+    //         isAuth = true;
+    //     }
+    // }
+    // if (!isAuth) {
+    //         res.status(400).render('login/error', {title: `Error`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+    //         return;
+    // }
+    // if (req.session.user) {
     try {
         const transactions = await transData.transFilterByTag(accountId, selectTag, req.params.sort);
         res.status(200).json(transactions);
     } catch (error) {
         res.status(400).json({message: error});
     }
+    // } else {
+    //     res.status(400).render('login/error',{title:'Error', error:'Please login'});
+    // }
 })
 
 //Filter by type(toAccountId) and accountId
@@ -887,12 +1048,27 @@ router.get('/transFilterByType/:accountId/:selectType/:sort', async (req, res) =
     }
     var accountId = req.params.accountId;
     var selectType = req.params.selectType;
-    try {
-        const transactions = await transData.transFilterByType(accountId, selectType, req.params.sort);
-        res.status(200).json(transactions);
-    } catch (error) {
-        res.status(400).json({message: error});
-    }
+    // let isAuth = false;
+    // let myUser = await userData.getUserById(req.session.user._id);
+    // for (let i =0; i< myUser.accounts.length; i++) {
+    //     if(myUser.accounts[i] == req.params.accountId) {
+    //         isAuth = true;
+    //     }
+    // }
+    // if (!isAuth) {
+    //         res.status(400).render('login/error', {title: `Error`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+    //         return;
+    // }
+    // if(req.session.user) {
+        try {
+            const transactions = await transData.transFilterByType(accountId, selectType, req.params.sort);
+            res.status(200).json(transactions);
+        } catch (error) {
+            res.status(400).json({message: error});
+        }
+    // } else {
+    //     res.status(400).render('login/error',{title:'Error', error:'Please login'});
+    // }
 })
 
 //Trend compared with last month by tag
@@ -905,12 +1081,27 @@ router.get('/trendByTag/:accountId/:tag', async (req, res) => {
     var myDate = new Date();
     var YYYY = myDate.getFullYear();
     var thisMonth = myDate.getMonth() + 1; 
-    try {
-        const result = await transData.trendByTag(accountId, thisMonth, YYYY, tag);
-        res.status(200).json(result);
-    } catch (error) {
-        res.status(400).json({message: error});
-    }
+    // let isAuth = false;
+    // let myUser = await userData.getUserById(req.session.user._id);
+    // for (let i =0; i< myUser.accounts.length; i++) {
+    //     if(myUser.accounts[i] == req.params.accountId) {
+    //         isAuth = true;
+    //     }
+    // }
+    // if (!isAuth) {
+    //         res.status(400).render('login/error', {title: `Error`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+    //         return;
+    // }
+    // if (req.session.user) {
+        try {
+            const result = await transData.trendByTag(accountId, thisMonth, YYYY, tag);
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(400).json({message: error});
+        }
+    // } else {
+    //     res.status(400).render('login/error',{title:'Error', error:'Please login'});
+    // }
 })
 
 module.exports = router;
