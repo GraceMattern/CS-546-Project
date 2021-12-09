@@ -30,44 +30,93 @@
         </form>
         <br>
 
+        <h5>Transaction History</h5>
+        <button id="showAll" type="button" class="btn btn-dark">Show all</button>
         {{!-- filter by month --}}
-        <p>Filter by month</p>
         <form id="selectMonth-form">
-            <label for="selectMonth">Date:</label>
+            <label for="selectMonth">Select by date:</label>
             <input id="selectMonth" type="month" name="selectMonth">
+            Sort by amount:
+            <input id="month-ascending" type="radio" name="monthSort" value="1">
+            <label for="month-ascending">ascending</label>
+            
+            <input id="month-descending"type="radio" name="monthSort" value="-1">
+            <label for="month-descending">descending</label>
+            
+            <input id="month-no-sort" type="radio" checked="checked" name="monthSort" value="0">
+            <label for="month-no-sort">no-sort</label>
+
             <button type="submit" class="btn btn-dark">Submit</button>
-            <button id="showAll" type="button" class="btn btn-dark">All</button>
+        </form>
+         {{!-- filter by tag --}}
+        <form id="selectTag-form">
+            <label for="selectTag">Select by tag:</label>
+            <select id="selectTag" name="selectTag">
+                <option value="food">Food</option>
+                <option value="goods and services">Goods and Services</option>
+                <option value="transport">Transport</option>
+                <option value="utilities">Utilities</option>
+                <option value="investment">Investment</option>
+                <option value="salary">Salary</option>
+                <option value="other">Other</option>
+            </select>
+
+            Sort by amount:
+            <input id="tag-ascending" type="radio" name="tagSort" value="1">
+            <label for="tag-ascending">ascending</label>
+            
+            <input id="tag-descending"type="radio" name="tagSort" value="-1">
+            <label for="tag-descending">descending</label>
+            
+            <input id="tag-no-sort" type="radio" checked="checked" name="tagSort" value="0">
+            <label for="month-no-sort">no-sort</label>
+
+            <button type="submit" class="btn btn-dark">Submit</button>
+        </form>
+        {{!-- filter by type --}}
+        <form id="selectType-form">
+            <label for="selectType">Select by type:</label>
+            <select id="selectType" name="selectType">
+                <option value="internal_deposit">income</option>
+                <option value="external_transaction">expense</option>
+            </select>
+
+            Sort by amount:
+            <input id="type-ascending" type="radio" name="typeSort" value="1">
+            <label for="type-ascending">ascending</label>
+            
+            <input id="type-descending"type="radio" name="typeSort" value="-1">
+            <label for="type-descending">descending</label>
+            
+            <input id="type-no-sort" type="radio" checked="checked" name="typeSort" value="0">
+            <label for="type-no-sort">no-sort</label>
+
+            <button type="submit" class="btn btn-dark">Submit</button>
         </form>
 
-        <p>Transaction History</p>
-        <ul id="transList"></ul>
+        <table id="transList" border="1"></table>
+        <button id="print" onclick="window.print()">Print this page</button>
         <p id="noTrans">View your history by first making a deposit or transaction</p>
-
-    {{!-- START: container for history --}}
-     {{!-- {{#if trans}}
-        <ul>
-            {{#each trans}}
-                <li>
-                    {{this.transAmount}}
-                    {{this.date.DD}}.{{this.date.MM}}.{{this.date.YYYY}}
-                    {{this.tag}}
-                    {{#ifEquals this.toAccountId "external_transaction"}}
-                        <a href="/edit/transaction/{{this._id}}">Edit</a>
-                        <a href="/delete/transaction/{{this._id}}">Delete</a>     
-                    {{/ifEquals}}
-                   {{#ifEquals this.toAccountId "internal_deposit"}}
-                        <a href="/edit/deposit/{{this._id}}">Edit</a> 
-                        <a href="/delete/deposit/{{this._id}}">Delete</a>       
-                    {{/ifEquals}}  
-                </li>
-            {{/each}}
-        </ul>
         
-        <button onclick="window.print()">Print this page</button>
-    {{else}}
-        <p>View your history by first making a deposit or transaction</p>
-    {{/if}} --}}
-    {{!-- END: container for history --}}
+        <div>
+            <h5>Trend</h5>
+            <p>Select the tag you want to compare with last month</p>
+            <form id="trend-form">
+                <label for="trendTag">Tag:</label>
+                <select id="trendTag" name="trendTag">
+                    <option value="food">Food</option>
+                    <option value="goods and services">Goods and Services</option>
+                    <option value="transport">Transport</option>
+                    <option value="utilities">Utilities</option>
+                    <option value="investment">Investment</option>
+                    <option value="salary">Salary</option>
+                    <option value="other">Other</option>
+                </select>
+                <button type="submit" class="btn btn-dark">Submit</button>
+            </form>
+            <ul id="trend"></ul>
+        </div>
+
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="

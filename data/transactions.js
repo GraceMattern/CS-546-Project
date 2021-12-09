@@ -27,7 +27,7 @@ async function createTrans(userId, accountId, toAccountId, amount, tag) {
     accountId: accountId,
     userId: userId,
     toAccountId: toAccountId,
-    transAmount: parseFloat(amount),
+    transAmount: parseFloat(amount).toFixed(2),
     date: {
       MM: CurrDate.getMonth() + 1,
       DD: CurrDate.getDate(),
@@ -50,7 +50,7 @@ async function createTrans(userId, accountId, toAccountId, amount, tag) {
   if (!found) throw "The Account does not exists!";
   found["transactions"].push(newId);
   if (toAccountId == "internal_deposit") { // deposit
-    found.balance = parseFloat(found.balance) + parseFloat(amount);
+    found.balance = (parseFloat(found.balance) + parseFloat(amount)).toFixed(2);
     delete found._id; 
     let parsedId;
     try {
@@ -68,8 +68,8 @@ async function createTrans(userId, accountId, toAccountId, amount, tag) {
     return transResult;
   }
   if (toAccountId == "external_transaction") { // transaction
-    if (found.balance < amount) throw `You have insuffient funds to make this transaction`
-    found.balance = parseFloat(found.balance) -  parseFloat(amount);
+    if (parseFloat(found.balance) < parseFloat(amount)) throw `You have insuffient funds to make this transaction`
+    found.balance = (parseFloat(found.balance) -  parseFloat(amount)).toFixed(2);
     delete found._id; 
     let parsedId;
     try {
@@ -236,7 +236,7 @@ async function update(transId, toAccountId, amount, tag, date) {
     }
     let foundTo = await accCollect.findOne({ _id: accountId });
     if (!foundTo) throw "account not found";
-    foundTo["balance"] = parseFloat(foundTo["balance"]) - (parseFloat(oldAmount) -  parseFloat(amount));
+    foundTo["balance"] = (parseFloat(foundTo["balance"]) - (parseFloat(oldAmount) -  parseFloat(amount))).toFixed(2);
 
     let updatedTo = await accCollect.updateOne(
       { _id: accountId },
@@ -277,7 +277,7 @@ async function update(transId, toAccountId, amount, tag, date) {
     }
     let foundTo = await accCollect.findOne({ _id: accountId });
     if (!foundTo) throw "account not found";
-    foundTo["balance"] = parseFloat(foundTo["balance"]) + (parseFloat(oldAmount) -  parseFloat(amount));
+    foundTo["balance"] = (parseFloat(foundTo["balance"]) + (parseFloat(oldAmount) -  parseFloat(amount))).toFixed(2);
 
     let updatedTo = await accCollect.updateOne(
       { _id: accountId },
@@ -333,10 +333,10 @@ async function deleteTrans(transId, type) {
      if (i==length-1) throw `no account with that transaction id`
    }
    if (type == "deposit") {
-      accountInfo.balance = parseFloat(accountInfo.balance) - parseFloat(transaction.transAmount)
+      accountInfo.balance = (parseFloat(accountInfo.balance) - parseFloat(transaction.transAmount)).toFixed(2);
    }
    if (type == "transaction") {
-      accountInfo.balance = parseFloat(accountInfo.balance) + parseFloat(transaction.transAmount)
+      accountInfo.balance = (parseFloat(accountInfo.balance) + parseFloat(transaction.transAmount)).toFixed(2);
    }
    delete accountInfo._id;
    let ObjAcctId;
@@ -361,15 +361,133 @@ async function deleteTrans(transId, type) {
    return accountInfo.transactions
 }
 
-async function transFilterByMonth(accountId,YYYY, MM) {
+//Filter by month, year and accountId
+async function transFilterByMonth(accountId, YYYY, MM, sort) {
+  if(!accountId || !YYYY || !MM || !sort) throw "please enter accountId, year, month, sort way";
+  isString(accountId);
+  isString(YYYY);
+  isString(MM);
+  isString(sort);
   const transactionCollection = await transactions();
-  const transactionList = await transactionCollection.find({
+  sort = parseInt(sort);
+  if(sort == 0){
+    const transactionList = await transactionCollection.find({
       "accountId": accountId,
       "date.YYYY": parseInt(YYYY),
       "date.MM": parseInt(MM),
-  }).toArray();
+    }).toArray();
+    return transactionList;
+  }
+  else{
+    const transactionList = await transactionCollection.find({
+      "accountId": accountId,
+      "date.YYYY": parseInt(YYYY),
+      "date.MM": parseInt(MM),
+    }).sort({"transAmount": sort}).toArray();
+    return transactionList;
+  }
+}
 
+//Filter by tag and accountId
+async function transFilterByTag(accountId, selectTag, sort) {
+  if(!accountId || !selectTag || !sort) throw "please enter accountId, tag, sort way";
+  isString(accountId);
+  isString(selectTag);
+  isString(sort);
+  const transactionCollection = await transactions();
+  sort = parseInt(sort);
+  if(sort == 0){
+    const transactionList = await transactionCollection.find({
+      "accountId": accountId,
+      "tag": selectTag,
+    }).toArray();
+    return transactionList;
+  }
+  else{
+    const transactionList = await transactionCollection.find({
+      "accountId": accountId,
+      "tag": selectTag,
+    }).sort({"transAmount": sort}).toArray();
+    return transactionList;
+  }
+  
+}
+
+//Filter by type(toAccountId) and accountId
+async function transFilterByType(accountId, selectType, sort) {
+  if(!accountId || !selectType || !sort) throw "please enter accountId, Type, sort way";
+  isString(accountId);
+  isString(selectType);
+  isString(sort);
+  const transactionCollection = await transactions();
+  sort = parseInt(sort);
+  if(sort == 0){
+    const transactionList = await transactionCollection.find({
+      "accountId": accountId,
+      "toAccountId": selectType,
+  }).toArray();
   return transactionList;
+  }
+  else{
+    const transactionList = await transactionCollection.find({
+      "accountId": accountId,
+      "toAccountId": selectType,
+    }).sort({"transAmount": sort}).toArray();
+    return transactionList;
+  }
+}
+
+//Trend compare with last month by tag
+async function trendByTag(accountId, thisMonth, YYYY, tag){
+  if(!accountId || !thisMonth || !YYYY || !tag) throw "please enter accountId, month and tag";
+  isString(accountId);
+  isString(tag);
+  // if (thisMonth > 12 || thisMonth < 1) throw `must provide valid numerical month number`
+
+  if(thisMonth == 1){
+    var lastMonth = 12;
+  }
+  else{
+    var lastMonth = thisMonth - 1;
+  }
+  const transactionCollection = await transactions();
+  
+  const lastMonthTransactionList = await transactionCollection.find({
+    "accountId": accountId,
+    "date.YYYY": YYYY,
+    "date.MM": lastMonth,
+    "tag": tag
+  }).toArray();
+  
+  var lastAmount = 0;
+  var lastListLength = lastMonthTransactionList.length;
+  if(lastListLength != 0){
+    for(let i = 0; i < lastListLength; i++){
+      lastAmount += lastMonthTransactionList[i].transAmount;
+    }
+  }
+
+  const thisMonthTransactionList = await transactionCollection.find({
+    "accountId": accountId,
+    "date.YYYY": YYYY,
+    "date.MM": thisMonth,
+    "tag": tag
+  }).toArray();
+  var thisAmount = 0;
+  var thisListLength = thisMonthTransactionList.length;
+  if(thisListLength != 0){
+    for(let i = 0; i < thisListLength; i++){
+      thisAmount += thisMonthTransactionList[i].transAmount;
+    }
+  }
+  var trend = (thisAmount-lastAmount)/lastAmount;
+  var result = {
+    "lastAmount": lastAmount,
+    "thisAmount": thisAmount,
+    "trend": parseFloat(trend.toFixed(2))
+  }
+
+  return result;
 }
 
 
@@ -383,5 +501,8 @@ module.exports = {
   // remove,
   getDetails,
   deleteTrans,
-  transFilterByMonth
+  transFilterByMonth,
+  transFilterByTag,
+  transFilterByType,
+  trendByTag
 };
