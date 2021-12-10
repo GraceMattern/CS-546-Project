@@ -514,9 +514,10 @@ async function trendByTag(accountId, thisMonth, YYYY, tag) {
       thisAmount += thisMonthTransactionList[i].transAmount;
     }
   }
-  if (lastMonth == 0 || thisAmount == 0)
-    throw `you cannot have any type of transaction be zero`;
-  var trend = (thisAmount - lastAmount) / lastAmount;
+  var trend = 0;
+  if(lastAmount == 0 && thisAmount != 0){trend = 1}
+  if(lastAmount != 0 && thisAmount == 0){trend = -1}
+  if(lastAmount != 0 && thisAmount != 0) {trend = (thisAmount - lastAmount) / lastAmount};
   var result = {
     lastAmount: lastAmount,
     thisAmount: thisAmount,
