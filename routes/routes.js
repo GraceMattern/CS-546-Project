@@ -221,19 +221,18 @@ router.get('/accounts', async (req, res) => {
 })
 
 router.get('/delete/accounts/:acctId', async (req, res) => {
-    let isAuth = false;
-    let myUser = await userData.getUserById(req.session.user._id);
-    for (let i =0; i< myUser.accounts.length; i++) {
-        if(myUser.accounts[i] == req.params.acctId) {
-            isAuth = true;
-        }
-    }
-    if (!isAuth) {
-            res.status(400).render('login/error', {title: `User  Profile`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
-            return;
-    }
-
     if(req.session.user){
+        let isAuth = false;
+        let myUser = await userData.getUserById(req.session.user._id);
+        for (let i =0; i< myUser.accounts.length; i++) {
+            if(myUser.accounts[i] == req.params.acctId) {
+                isAuth = true;
+            }
+        }
+        if (!isAuth) {
+                res.status(400).render('login/error', {title: `User  Profile`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+                return;
+        }
         if(!req.params.acctId) {
             res.status(400).render('login/error',{title:'Error', error:'Must supply transaction id', authenticated: true, user:req.session.user});
             return;
@@ -377,18 +376,18 @@ router.post('/edit/user/:id', async (req, res) => {
 }) 
 
 router.get('/dashboard/:id', async (req, res) => {
-    let isAuth = false;
-    let myUser = await userData.getUserById(req.session.user._id);
-    for (let i =0; i< myUser.accounts.length; i++) {
-        if(myUser.accounts[i] == req.params.id) {
-            isAuth = true;
-        }
-    }
-    if (!isAuth) {
-            res.status(400).render('login/error', {title: `Dashboard`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
-            return;
-    }
     if(req.session.user){
+        let isAuth = false;
+        let myUser = await userData.getUserById(req.session.user._id);
+        for (let i =0; i< myUser.accounts.length; i++) {
+            if(myUser.accounts[i] == req.params.id) {
+                isAuth = true;
+            }
+        }
+        if (!isAuth) {
+                res.status(400).render('login/error', {title: `Dashboard`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+                return;
+        }
         if(!req.params.id) {
             res.status(400).render('login/error',{title:'Error', error:'Must supply account id', authenticated: true, user:req.session.user});
             return;
@@ -418,18 +417,18 @@ router.get('/dashboard/:id', async (req, res) => {
 })
 
 router.post('/dashboard/:acctId', async (req, res) => {
-    let isAuth = false;
-    let myUser = await userData.getUserById(req.session.user._id);
-    for (let i =0; i< myUser.accounts.length; i++) {
-        if(myUser.accounts[i] == req.params.acctId) {
-            isAuth = true;
-        }
-    }
-    if (!isAuth) {
-            res.status(400).render('login/error', {title: `User  Profile`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
-            return;
-    }
     if (req.session.user) {
+        let isAuth = false;
+        let myUser = await userData.getUserById(req.session.user._id);
+        for (let i =0; i< myUser.accounts.length; i++) {
+            if(myUser.accounts[i] == req.params.acctId) {
+                isAuth = true;
+            }
+        }
+        if (!isAuth) {
+                res.status(400).render('login/error', {title: `User  Profile`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+                return;
+        }
         if(!req.params.acctId) {
             res.status(400).render('login/error',{title:'Error', error:'Must supply account id', authenticated: true, user:req.session.user});
             return;
@@ -507,18 +506,18 @@ router.post('/dashboard/:acctId', async (req, res) => {
 })
 
 router.get('/deposit/:acctId', async (req, res) => {
-    let isAuth = false;
-    let myUser = await userData.getUserById(req.session.user._id);
-    for (let i =0; i< myUser.accounts.length; i++) {
-        if(myUser.accounts[i] == req.params.acctId) {
-            isAuth = true;
-        }
-    }
-    if (!isAuth) {
-            res.status(400).render('login/error', {title: `Make a deposit`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
-            return;
-    }
     if(req.session.user){
+        let isAuth = false;
+        let myUser = await userData.getUserById(req.session.user._id);
+        for (let i =0; i< myUser.accounts.length; i++) {
+            if(myUser.accounts[i] == req.params.acctId) {
+                isAuth = true;
+            }
+        }
+        if (!isAuth) {
+                res.status(400).render('login/error', {title: `Make a deposit`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+                return;
+        }
         if(!req.params.acctId) {
             res.status(400).render('login/error',{title:'Error', error:'Must supply account id',  authenticated: true, user:req.session.user});
             return;
@@ -545,18 +544,18 @@ router.get('/deposit/:acctId', async (req, res) => {
 })
 
 router.get('/transaction/:acctId', async (req, res) => {
-    let isAuth = false;
-    let myUser = await userData.getUserById(req.session.user._id);
-    for (let i =0; i< myUser.accounts.length; i++) {
-        if(myUser.accounts[i] == req.params.acctId) {
-            isAuth = true;
-        }
-    }
-    if (!isAuth) {
-            res.status(400).render('login/error', {title: `Make a transaction`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
-            return;
-    }
     if(req.session.user){
+        let isAuth = false;
+        let myUser = await userData.getUserById(req.session.user._id);
+        for (let i =0; i< myUser.accounts.length; i++) {
+            if(myUser.accounts[i] == req.params.acctId) {
+                isAuth = true;
+            }
+        }
+        if (!isAuth) {
+                res.status(400).render('login/error', {title: `Make a transaction`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+                return;
+        }
         if(!req.params.acctId) {
             res.status(400).render('login/error',{title:'Error', error:'Must supply account id',  authenticated: true, user:req.session.user});
             return;
@@ -943,18 +942,18 @@ router.post('/transfer', async (req, res) => {
 })
 
 router.get('/transactions/:accountId', async (req, res) => { // TESTING POINT
-//     let isAuth = false;
-    // let myUser = await userData.getUserById(req.session.user._id);
-    // for (let i =0; i< myUser.accounts.length; i++) {
-    //     if(myUser.accounts[i] == req.params.accountId) {
-    //         isAuth = true;
-    //     }
-    // }
-//     if (!isAuth) {
-//             res.status(400).render('login/error', {title: `Error`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
-//             return;
-//     }
     if (req.session.user) {
+        // let isAuth = false;
+        // let myUser = await userData.getUserById(req.session.user._id);
+        // for (let i =0; i< myUser.accounts.length; i++) {
+        //     if(myUser.accounts[i] == req.params.accountId) {
+        //         isAuth = true;
+        //     }
+        // }
+        // if (!isAuth) {
+        //     res.status(400).render('login/error', {title: `Error`, error: `You are not authorized`, authenticated: true, user:req.session.user}); 
+        //     return;
+        // }
         if(!req.params.accountId) {
             res.status(400).render('login/error',{title:'Error', error:'Must supply account id', authenticated: true, user:req.session.user});
             return;

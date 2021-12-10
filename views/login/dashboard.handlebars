@@ -2,13 +2,10 @@
     <p class="rightAlign"><span>{{title}}</span>{{user.firstName}} {{user.lastName}}</p>
     <p class="rightAlign" id="accountId" title="{{account._id}}">Account ID: {{account._id}}</p> 
     <p class="rightAlign">Account type: {{account.accountType}}</p>
-    {{!-- <h1 class='leftAlign'>{{title}}</h1> --}}
 </div>
-
 
 <div id="body-box">
     <div class="dashboard-container">
-        
         <div class="centerBalance">
             <p id="balance">${{account.balance}}</p>
             <p>Balance</p>
@@ -22,6 +19,8 @@
             <button type="submit" class="btn btn-dark">Make a transaction</button>
         </form>
         <br>
+
+        {{!-- TODO PUT GRAPH HERE --}}
 
         <h1>Transaction History</h1>
         {{!-- filter by month --}}
@@ -115,6 +114,5 @@
         </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="/public/js/transFilter.js"></script>

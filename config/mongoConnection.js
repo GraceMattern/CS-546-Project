@@ -1,9 +1,9 @@
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require("mongodb").MongoClient;
 const settings = {
-    mongoConfig: {
-      serverUrl: 'mongodb://localhost:27017/',
-      database: 'CS546B-Group6-Project'
-    }
+  mongoConfig: {
+    serverUrl: "mongodb://localhost:27017/",
+    database: "CS546B-Group6-Project",
+  },
 };
 const mongoConfig = settings.mongoConfig;
 
@@ -21,5 +21,5 @@ module.exports = {
   },
   closeConnection: () => {
     _connection.close();
-  }
+  },
 };

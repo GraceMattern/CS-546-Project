@@ -1,5 +1,5 @@
 * {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html,
@@ -14,8 +14,8 @@ body {
 }
 
 main {
-	max-width: 75%;
-	margin: auto;
+  max-width: 75%;
+  margin: auto;
   padding-top: 35px;
   padding-bottom: 70px;
   padding-left: 0px;
@@ -23,45 +23,45 @@ main {
 }
 
 h1 {
-	font-size: 2rem;
+  font-size: 2rem;
 }
 
 h2 {
-	font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 
 h3 {
-	font-size: 1.35rem;
+  font-size: 1.35rem;
 }
 
 h4 {
-	font-size: 1.25rem;
+  font-size: 1.25rem;
 }
 
 h5 {
-	font-size: 1.15rem;
+  font-size: 1.15rem;
 }
 
 h6 {
-	font-size: 1.05rem;
+  font-size: 1.05rem;
 }
 
 p {
-	font-size: 1rem;
+  font-size: 1rem;
 }
 
 a {
-    /* color: #0072ee; */
-    color: #006be0;
+  /* color: #0072ee; */
+  color: #006be0;
 }
 
 #navbar-img {
-    width: 3em;
-    height: 3em;
+  width: 3em;
+  height: 3em;
 }
 
 .error {
-    color: red;
+  color: red;
 }
 
 .centerBalance {
@@ -73,11 +73,7 @@ a {
   font-weight: bolder;
   font-size: 4em;
 }
-/* 
-.leftAlign {
-	float: left;
-  text-align: left;
-} */
+
 .rightAlign {
   display: block;
   margin: 10px;
@@ -98,7 +94,7 @@ a {
 }
 
 .dashboard-header {
-  padding-bottom:5%;
+  padding-bottom: 5%;
 }
 
 #printBtn {
@@ -111,11 +107,15 @@ a {
   padding: auto;
 }
 
+table {
+  border: none;
+}
+
 @media only screen and (max-width: 700px) {
-  .container{
-      width:100%;
+  .container {
+    width: 100%;
   }
-  .profile-container{
-      height:400px;
+  .profile-container {
+    height: 400px;
   }
 }
