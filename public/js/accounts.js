@@ -1,7 +1,7 @@
 (function ($) {
     $('#account-form').on('submit', function(e) {
         e.preventDefault();
-        console.log("form was submitted");
+        // console.log("form was submitted");
         $('#account-form').unbind().submit();
     })
 

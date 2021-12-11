@@ -169,10 +169,10 @@
       $("#trend").show();
       $("#trend").empty();
       var lastMonth = `<li>
-                                The amount last month you spent in ${tag} is ${result[0].lastAmount}.
+                                Last month your total transactions in ${tag} was ${result[0].lastAmount}.
                             </li>`;
       var thisMonth = `<li>
-                                The amount this month you spent in ${tag} is ${result[0].thisAmount}.
+                                This month your total transactions in ${tag} was ${result[0].thisAmount}.
                             </li>`;
       var trend = `<li>
                             The trend is ${result[0].trend * 100}%

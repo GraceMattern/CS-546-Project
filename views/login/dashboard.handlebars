@@ -37,7 +37,7 @@
             <input id="month-no-sort" type="radio" checked="checked" name="monthSort" value="0">
             <label for="month-no-sort">no-sort</label>
 
-            <button type="submit" class="btn btn-dark">Submit</button>
+            <button type="submit" id="monthSubmit" class="btn btn-dark">Submit</button>
         </form>
          {{!-- filter by tag --}}
         <form id="selectTag-form">
@@ -62,7 +62,7 @@
             <input id="tag-no-sort" type="radio" checked="checked" name="tagSort" value="0">
             <label for="tag-no-sort">no-sort</label>
 
-            <button type="submit" class="btn btn-dark">Submit</button>
+            <button type="submit" id="tagSubmit" class="btn btn-dark">Submit</button>
         </form>
         {{!-- filter by type --}}
         <form id="selectType-form">
@@ -82,8 +82,9 @@
             <input id="type-no-sort" type="radio" checked="checked" name="typeSort" value="0">
             <label for="type-no-sort">no-sort</label>
 
-            <button type="submit" class="btn btn-dark">Submit</button>
+            <button type="submit" id="typeSubmit" class="btn btn-dark">Submit</button>
         </form>
+        {{!-- SHOW ALL --}}
         <div id="showAllRight">
             <button id="showAll" type="button" class="btn btn-dark">Show all</button>
         </div>
@@ -104,7 +105,7 @@
                     <option value="salary">Salary</option>
                     <option value="other">Other</option>
                 </select>
-                <button type="submit" class="btn btn-dark">Submit</button>
+                <button type="submit" id="trendSubmit" class="btn btn-dark">Submit</button>
             </form>
             <ul id="trend"></ul>
         </div>
@@ -116,3 +117,4 @@
 </div>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="/public/js/transFilter.js"></script>
+{{!-- <script src="/public/js/dashboard.js"></script> --}}

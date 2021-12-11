@@ -8,7 +8,7 @@
         return true;
     }
 
-    let signupForm =$('#signup-form');
+    let editProfileForm =$('#edit-profile-form');
     let firstNameInput = $('#firstName');
     let lastNameInput = $('#lastName');
     let bankInput = $('#bank');
@@ -17,7 +17,7 @@
     let ageInput = $('#age');
     let submitButton = $('#submit');
 
-    signupForm.submit((event) => {
+    editProfileForm.submit((event) => {
         event.preventDefault();
         hasErrors = false;
         $('.error').hide();
@@ -61,10 +61,9 @@
             passwordInput.addClass('is-invalid');
         let strippedStr = info.password.trim().replace(/\s+/g, "");
         if (strippedStr.length < 6) passwordInput.addClass('is-invalid');
-        
-        if (!hasErrors) { 
-        // if (!hasErrors && info.password.trim().length >5 && parseInt(info.age) > 17) {
-            signupForm.unbind().submit();
+          
+        if (!hasErrors && info.password.trim().length >5 && parseInt(info.age) > 17) {
+            editProfileForm.unbind().submit();
         } else {
             submitButton.prop('disabled', false);
         }

@@ -477,6 +477,9 @@ async function trendByTag(accountId, thisMonth, YYYY, tag) {
 
   if (thisMonth == 1) {
     var lastMonth = 12;
+  } 
+  if (thisMonth >12 || thisMonth < 1) {
+    throw "month number must be between 1 and 12"
   } else {
     var lastMonth = thisMonth - 1;
   }
@@ -495,7 +498,7 @@ async function trendByTag(accountId, thisMonth, YYYY, tag) {
   var lastListLength = lastMonthTransactionList.length;
   if (lastListLength != 0) {
     for (let i = 0; i < lastListLength; i++) {
-      lastAmount += lastMonthTransactionList[i].transAmount;
+      lastAmount += parseFloat(lastMonthTransactionList[i].transAmount);
     }
   }
 
@@ -511,7 +514,7 @@ async function trendByTag(accountId, thisMonth, YYYY, tag) {
   var thisListLength = thisMonthTransactionList.length;
   if (thisListLength != 0) {
     for (let i = 0; i < thisListLength; i++) {
-      thisAmount += thisMonthTransactionList[i].transAmount;
+      thisAmount += parseFloat(thisMonthTransactionList[i].transAmount);
     }
   }
   var trend = 0;
@@ -519,8 +522,8 @@ async function trendByTag(accountId, thisMonth, YYYY, tag) {
   if(lastAmount != 0 && thisAmount == 0){trend = -1}
   if(lastAmount != 0 && thisAmount != 0) {trend = (thisAmount - lastAmount) / lastAmount};
   var result = {
-    lastAmount: lastAmount,
-    thisAmount: thisAmount,
+    lastAmount: parseFloat(lastAmount).toFixed(2),
+    thisAmount: parseFloat(thisAmount).toFixed(2),
     trend: parseFloat(trend.toFixed(2)),
   };
 
