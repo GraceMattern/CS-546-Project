@@ -3,17 +3,23 @@
     <h1>{{title}}</h1>
 
     <form id="account-form" method="post" action="/profile">
-        <p>Select the account type</p>
-        <input type="radio" name="accountType" id="savings" value="savings">
-        <label for="savings">Savings</label><br>
-        <input type="radio" name="accountType" id="checkings" value="checkings">
-        <label for="checkings">Checkings</label><br>
-        <input type="radio" name="accountType" id="joint" value="joint">
-        <label for="joint">Joint</label><br>
-        <button type="submit" class="btn btn-dark">Add account</button>
+        <div class="form-group">
+          <p>Select the account type</p>
+          <input type="radio" name="accountType" id="savings" value="savings">
+          <label for="savings">Savings</label><br>
+          <input type="radio" name="accountType" id="checkings" value="checkings">
+          <label for="checkings">Checkings</label><br>
+          <input type="radio" name="accountType" id="joint" value="joint">
+          <label for="joint">Joint</label><br>
+          <button type="submit" id="acctSubmit" class="btn btn-dark">Add account</button>
+        </div>
     </form>
+    <div id="myWarning" class="invalid-feedback" hidden></div>
     <div class="error">
       {{warning}} 
     </div>
   </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="/public/js/accounts.js"></script>

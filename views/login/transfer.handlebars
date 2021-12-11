@@ -4,23 +4,32 @@
         {{#if accts.[1]}}
             <form id="transfer-form" method="post" action="/transfer">
                 <label for="from">From:</label>
-                <select name="from" id="from">
+                <select name="from" id="from" class="form-control">
                     {{#each accts}}
                         <option value={{this}}>{{this}}</option>
                     {{/each}}
                 </select>
-                <br>
-                <label for="amount">Amount:</label>
-                <input type="number" placeholder="Enter an amount" name="amount" id="amount"  min="0.01" step="0.01">
-                <br>
+                <div class="invalid-feedback">
+                    From account be the same as the To account
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount:</label>
+                    <input type="number" class="form-control" placeholder="Enter an amount" name="amount" id="amount"  min="0.01" step="0.01">
+                    <div class="invalid-feedback">
+                        Amount cannot be empty
+                    </div>
+                </div>
                 <label for="to">To:</label>
-                <select name="to" id="to">
+                <select name="to" id="to" class="form-control">
                     {{#each accts}}
                         <option value={{this}}>{{this}}</option>
                     {{/each}}
                 </select>
+                <div class="invalid-feedback">
+                    To account be the same as the From account
+                </div>
                 <br>
-                <button type="submit" class="btn btn-dark">Submit</button>
+                <button type="submit" id="transferSubmit" class="btn btn-dark">Submit</button>
             </form>
         {{else}}
             <p>You currently don't have any accounts you can transfer to. Try creating another account </p>
@@ -30,3 +39,5 @@
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="/public/js/transfer.js"></script>

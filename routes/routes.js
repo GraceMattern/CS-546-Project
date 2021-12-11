@@ -180,13 +180,13 @@ router.post('/profile', async (req, res) => {
     if (req.session.user) {
         let accountInfo = req.body; // schema {accountType: "savings"}
         if(!accountInfo) {
-            res.status(400).render('login/accounts', {title: `Create an Account`, warning: `You must select an account type`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/accounts', {title: `Create an Account`, warning: `You must select an account type 1`, authenticated: true, user:req.session.user});
             return;
         }
-        if(!accountInfo.accountType){
-            res.status(400).render('login/accounts', {title: `Create an Account`, warning: `You must select an account type`, authenticated: true,user:req.session.user});
-            return;
-        }
+        // if(!accountInfo.accountType){
+        //     res.status(400).render('login/accounts', {title: `Create an Account`, warning: `You must select an account type 2`, authenticated: true,user:req.session.user});
+        //     return;
+        // }
 
         // TODO make sure account type is string
 
@@ -889,7 +889,7 @@ router.get('/transfer', async (req, res) => {
             const user = await userData.getUserById(req.session.user._id);
             res.status(200).render('login/transfer',{title:'Transfer', accts: user.accounts, authenticated: true, user:req.session.user});
         } catch (e) {
-            res.status(400).render('login/transfer',{title:'Transfer', warning:'Could not transfer', authenticated: true, user:req.session.user});
+            res.status(400).render('login/transfer',{title:'Transfer', warning:'Could not load', authenticated: true, user:req.session.user});
         }
     } else {
         res.status(400).render('login/error',{title:'Error', error:'Please login',});
@@ -899,30 +899,32 @@ router.get('/transfer', async (req, res) => {
 router.post('/transfer', async (req, res) => {
     if(req.session.user){
         let info = req.body; // schema {from: acct, amount: amount, to: acct}
+        const user = await userData.getUserById(req.session.user._id);
         if(!info) {
-            res.status(400).render('login/transfer', {title: `Transfer`, warning: `You must fill out all fields`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/transfer', {title: `Transfer`, warning: `You must fill out all fields`, authenticated: true, user:req.session.user,  accts: user.accounts});
             return;
         }
         if(!info.from){
-            res.status(400).render('login/transfer', {title: `Transfer`, warning: `You must select which account to transfer from`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/transfer', {title: `Transfer`, warning: `You must select which account to transfer from`, authenticated: true, user:req.session.user,  accts: user.accounts});
             return;
         }
         if(!info.amount){
-            res.status(400).render('login/transfer', {title: `Transfer`, warning: `You must enter an amount to transfer`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/transfer', {title: `Transfer`, warning: `You must enter an amount to transfer`, authenticated: true, user:req.session.user,  accts: user.accounts});
             return;
         }
         if(!info.to){
-            res.status(400).render('login/transfer', {title: `Transfer`, warning: `You must select which account to recieve the transfer`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/transfer', {title: `Transfer`, warning: `You must select which account to recieve the transfer`, authenticated: true, user:req.session.user,  accts: user.accounts});
             return;
         }
         if(info.from == info.to){
-            res.status(400).render('login/transfer', {title: `Transfer`, warning: `You must select a different from and to account to transfer`, authenticated: true, user:req.session.user});
+            const user = await userData.getUserById(req.session.user._id);
+            res.status(400).render('login/transfer', {title: `Transfer`, warning: `You must select a different from and to account to transfer`, authenticated: true, user:req.session.user, accts: user.accounts });
             return;
         }
         let fromAcct = await accountData.getAccount(info.from)
         let toAcct = await accountData.getAccount(info.to)
         if (fromAcct.balance < info.amount) {
-            res.status(400).render('login/transfer', {title: `Transfer`, warning: `You do not have enough money to make that transaction from that account`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/transfer', {title: `Transfer`, warning: `You do not have enough money to make that transaction from that account`, authenticated: true, user:req.session.user,  accts: user.accounts});
             return;
         }
 
