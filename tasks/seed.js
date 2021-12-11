@@ -5,7 +5,6 @@ const accounts = data.accounts;
 // const transactions = data.transactions;
 
 async function main() {
-
     console.log('This may take a few moments');
 
     const db = await dbConnection.connectToDb();
@@ -40,7 +39,6 @@ async function main() {
 
 	console.log('Done seeding database');
     await dbConnection.closeConnection();
-
 }
 main().catch((error) => {
     console.error(error);

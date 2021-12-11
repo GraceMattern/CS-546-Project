@@ -1,21 +1,11 @@
 <div class="dashboard-header">
-<p>{{user.firstName}} {{user.lastName}}</p>
-<p id="accountId" title="{{account._id}}">Account ID: {{account._id}}</p> 
-<p>Account type: {{account.accountType}}</p>
-{{!-- <form action="/profile">
-    <button type="submit" class="btn btn-dark">View Profile</button>
-</form>
-<br>
-<form action="/logout">
-        <button type="submit" class="btn btn-dark">Logout</button>
-    </form> --}}
+    <p class="rightAlign"><span>{{title}}</span>{{user.firstName}} {{user.lastName}}</p>
+    <p class="rightAlign" id="accountId" title="{{account._id}}">Account ID: {{account._id}}</p> 
+    <p class="rightAlign">Account type: {{account.accountType}}</p>
 </div>
-
 
 <div id="body-box">
     <div class="dashboard-container">
-        <h1>{{title}}</h1>
-        
         <div class="centerBalance">
             <p id="balance">${{account.balance}}</p>
             <p>Balance</p>
@@ -30,8 +20,9 @@
         </form>
         <br>
 
-        <h5>Transaction History</h5>
-        <button id="showAll" type="button" class="btn btn-dark">Show all</button>
+        {{!-- TODO PUT GRAPH HERE --}}
+
+        <h1>Transaction History</h1>
         {{!-- filter by month --}}
         <form id="selectMonth-form">
             <label for="selectMonth">Select by date:</label>
@@ -46,7 +37,7 @@
             <input id="month-no-sort" type="radio" checked="checked" name="monthSort" value="0">
             <label for="month-no-sort">no-sort</label>
 
-            <button type="submit" class="btn btn-dark">Submit</button>
+            <button type="submit" id="monthSubmit" class="btn btn-dark">Submit</button>
         </form>
          {{!-- filter by tag --}}
         <form id="selectTag-form">
@@ -69,9 +60,9 @@
             <label for="tag-descending">descending</label>
             
             <input id="tag-no-sort" type="radio" checked="checked" name="tagSort" value="0">
-            <label for="month-no-sort">no-sort</label>
+            <label for="tag-no-sort">no-sort</label>
 
-            <button type="submit" class="btn btn-dark">Submit</button>
+            <button type="submit" id="tagSubmit" class="btn btn-dark">Submit</button>
         </form>
         {{!-- filter by type --}}
         <form id="selectType-form">
@@ -91,15 +82,17 @@
             <input id="type-no-sort" type="radio" checked="checked" name="typeSort" value="0">
             <label for="type-no-sort">no-sort</label>
 
-            <button type="submit" class="btn btn-dark">Submit</button>
+            <button type="submit" id="typeSubmit" class="btn btn-dark">Submit</button>
         </form>
-
-        <table id="transList" border="1"></table>
-        <button id="print" onclick="window.print()">Print this page</button>
+        {{!-- SHOW ALL --}}
+        <div id="showAllRight">
+            <button id="showAll" type="button" class="btn btn-dark">Show all</button>
+        </div>
+        <table class="table table-striped table-borderless table-hover" id="transList" border="1"></table>
         <p id="noTrans">View your history by first making a deposit or transaction</p>
         
         <div>
-            <h5>Trend</h5>
+            <h2>Trend</h2>
             <p>Select the tag you want to compare with last month</p>
             <form id="trend-form">
                 <label for="trendTag">Tag:</label>
@@ -112,13 +105,16 @@
                     <option value="salary">Salary</option>
                     <option value="other">Other</option>
                 </select>
-                <button type="submit" class="btn btn-dark">Submit</button>
+                <button type="submit" id="trendSubmit" class="btn btn-dark">Submit</button>
             </form>
             <ul id="trend"></ul>
         </div>
 
+        <div id="printBtn">
+            <button id="print" onclick="window.print()">Export this page as a PDF</button>
+        </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="/public/js/transFilter.js"></script>
+{{!-- <script src="/public/js/dashboard.js"></script> --}}

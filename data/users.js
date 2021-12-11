@@ -12,7 +12,7 @@ function isString(str, varName) {
 function isAdult(num) {
   if (!num && parseFloat(num) != 0) throw `Age must be provided`;
   if (typeof parseFloat(num) != "number") throw `Age must be a number`;
-  if (parseFloat(num) < 18) throw  `You must be at least 18 years old`
+  if (parseFloat(num) < 18) throw `You must be at least 18 years old`;
 }
 // ----------ERROR HANDLING----------
 function isEmail(bank, email) {
@@ -70,7 +70,8 @@ module.exports = {
     // check that the username i.e. the email is unique
     const userCollection = await users();
     const otherUser = await userCollection.findOne({ username: email });
-    if (otherUser != null) throw `There is already a user with that email ${email} ${otherUser}`;
+    if (otherUser != null)
+      throw `There is already a user with that email ${email} ${otherUser}`;
 
     // encrypt
     const hash = await bcrypt.hash(password, saltRounds);
@@ -229,6 +230,5 @@ module.exports = {
       throw `Failed to update user`;
 
     return await this.getUserById(userId.trim());
-    // return {userUpdated: true}
   },
 };
