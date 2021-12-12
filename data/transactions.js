@@ -189,7 +189,9 @@ async function update(transId, toAccountId, amount, tag, date) {
   if (parseFloat(amount) <= 0)
     throw "Amount must be a positive, non zero number";
 
-  // TODO must do more error checking
+  if(!tag || isString(tag)) throw `A tag must be supplied`
+
+  if(!date || isString(date)) throw `A date must be supplied`
 
   if (toAccountId === "internal_deposit") {
     const transCollect = await transactions();
@@ -209,7 +211,7 @@ async function update(transId, toAccountId, amount, tag, date) {
       { _id: objId },
       {
         $set: {
-          transAmount: parseFloat(amount),
+          transAmount: parseFloat(amount).toFixed(2),
           tag: tag,
           date: {
             MM: parseInt(date.substring(5, 7)),
@@ -263,7 +265,7 @@ async function update(transId, toAccountId, amount, tag, date) {
       { _id: objId },
       {
         $set: {
-          transAmount: parseFloat(amount),
+          transAmount: parseFloat(amount).toFixed(2),
           tag: tag,
           date: {
             MM: parseInt(date.substring(5, 7)),
@@ -302,7 +304,7 @@ async function update(transId, toAccountId, amount, tag, date) {
 }
 
 async function getDetails(arr) {
-  // TODO error check: arr is type array
+  if (!Array.isArray(arr)) throw `you must supply an array`
   if (!arr) return [];
   // arr can be empty since if there are no transactions
   else {

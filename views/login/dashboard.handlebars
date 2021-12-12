@@ -20,18 +20,16 @@
         </form>
         <br>
 
-        {{!-- TODO PUT GRAPH HERE --}}
-
         <h1>Transaction History</h1>
         {{!-- filter by month --}}
         <form id="selectMonth-form">
-            <label for="selectMonth">Select by date:</label>
+            <label for="selectMonth">Select by month:</label>
             <input id="selectMonth" type="month" name="selectMonth">
             Sort by amount:
             <input id="month-ascending" type="radio" name="monthSort" value="1">
             <label for="month-ascending">ascending</label>
             
-            <input id="month-descending"type="radio" name="monthSort" value="-1">
+            <input id="month-descending" type="radio" name="monthSort" value="-1">
             <label for="month-descending">descending</label>
             
             <input id="month-no-sort" type="radio" checked="checked" name="monthSort" value="0">
@@ -56,7 +54,7 @@
             <input id="tag-ascending" type="radio" name="tagSort" value="1">
             <label for="tag-ascending">ascending</label>
             
-            <input id="tag-descending"type="radio" name="tagSort" value="-1">
+            <input id="tag-descending" type="radio" name="tagSort" value="-1">
             <label for="tag-descending">descending</label>
             
             <input id="tag-no-sort" type="radio" checked="checked" name="tagSort" value="0">
@@ -76,7 +74,7 @@
             <input id="type-ascending" type="radio" name="typeSort" value="1">
             <label for="type-ascending">ascending</label>
             
-            <input id="type-descending"type="radio" name="typeSort" value="-1">
+            <input id="type-descending" type="radio" name="typeSort" value="-1">
             <label for="type-descending">descending</label>
             
             <input id="type-no-sort" type="radio" checked="checked" name="typeSort" value="0">
@@ -88,7 +86,7 @@
         <div id="showAllRight">
             <button id="showAll" type="button" class="btn btn-dark">Show all</button>
         </div>
-        <table class="table table-striped table-borderless table-hover" id="transList" border="1"></table>
+        <table class="table table-striped table-borderless table-hover" id="transList"></table>
         <p id="noTrans">View your history by first making a deposit or transaction</p>
         
         <div>

@@ -12,7 +12,7 @@ function isString(str, varName) {
 function isAdult(num) {
   if (!num && parseFloat(num) != 0) throw `Age must be provided`;
   if (typeof parseFloat(num) != "number") throw `Age must be a number`;
-  if (parseFloat(num) < 18) throw `You must be at least 18 years old`;
+  // if (parseFloat(num) < 18) throw `You must be at least 18 years old`;
 }
 // ----------ERROR HANDLING----------
 function isEmail(bank, email) {

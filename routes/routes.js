@@ -13,7 +13,7 @@ router.get('/', async (req,res) => {
         const allAcct = await userData.getUserById(req.session.user._id)
         res.status(200).render('login/profile',{title:'User Profile',user:req.session.user, accts: allAcct, authenticated: true});
     }else{
-        res.status(200).render('login/landing');
+        res.status(200).render('login/landing', {title: "E-banking"});
     }
 });
 
@@ -118,8 +118,8 @@ router.post('/signup', async (req,res)=>{
         return;
     }
 
-    if ((!userInfo.age && parseInt(userInfo.age) != 0) || typeof parseInt(userInfo.age) != 'number' || parseInt(userInfo.age) < 18) {
-        res.status(400).render('login/signup', {title: `Sign up`, warning: `You must be 18 years or older`});
+    if ((!userInfo.age && parseInt(userInfo.age) != 0) || typeof parseInt(userInfo.age) != 'number') {
+        res.status(400).render('login/signup', {title: `Sign up`, warning: `You must enter a number`});
         return;
     }
 
@@ -172,7 +172,7 @@ router.get('/profile', async (req,res) => {
         const allAcct = await userData.getUserById(req.session.user._id)
         res.status(200).render('login/profile',{title:'User Profile',user:req.session.user, accts: allAcct, authenticated: true });
     }else{
-        res.status(400).render('login/error',{title:'Error', error:'Please login'});
+        res.redirect('/');
     }
 });
 
@@ -180,15 +180,13 @@ router.post('/profile', async (req, res) => {
     if (req.session.user) {
         let accountInfo = req.body; // schema {accountType: "savings"}
         if(!accountInfo) {
-            res.status(400).render('login/accounts', {title: `Create an Account`, warning: `You must select an account type 1`, authenticated: true, user:req.session.user});
+            res.status(400).render('login/accounts', {title: `Create an Account`, warning: `You must select an account type`, authenticated: true, user:req.session.user});
             return;
         }
-        // if(!accountInfo.accountType){
-        //     res.status(400).render('login/accounts', {title: `Create an Account`, warning: `You must select an account type 2`, authenticated: true,user:req.session.user});
-        //     return;
-        // }
-
-        // TODO make sure account type is string
+        if(!accountInfo.accountType || typeof accountInfo.accountType != 'string'){
+            res.status(400).render('login/accounts', {title: `Create an Account`, warning: `You must select an account type`, authenticated: true,user:req.session.user});
+            return;
+        }
 
         // add account to user
         try {
@@ -245,8 +243,6 @@ router.get('/delete/accounts/:acctId', async (req, res) => {
             res.status(400).render('login/error',{title:'Error', error:'transaction id cannot be an empty string', authenticated: true, user:req.session.user});
             return;
         }
-
-        // TODO do i need to try to mongodb objId check
         
         try {
             const deleteAcct = await accountData.removeAccount(req.params.acctId)
@@ -319,8 +315,8 @@ router.post('/edit/user/:id', async (req, res) => {
             return;
         }
 
-        if ((!userInfo.age && parseInt(userInfo.age) != 0) || typeof parseInt(userInfo.age) != 'number' || parseInt(userInfo.age) < 18) {
-            res.status(400).render('login/user', {title: `Edit Profile`, warning: `You must be 18 years or older`, authenticated: true, user:req.session.user});
+        if ((!userInfo.age && parseInt(userInfo.age) != 0) || typeof parseInt(userInfo.age) != 'number') {
+            res.status(400).render('login/user', {title: `Edit Profile`, warning: `You must enter a number`, authenticated: true, user:req.session.user});
             return;
         }
         if(!req.params.id) {
@@ -353,7 +349,17 @@ router.post('/edit/user/:id', async (req, res) => {
             return;
         }
 
-        // TODO at least one data is different than old data
+        const oldUser = await userData.getUserById(req.session.user._id)
+        if ((oldUser.firstName == userInfo.firstName) &&
+            (oldUser.lastName == userInfo.lastName) &&
+            (oldUser.bank == userInfo.bank) &&
+            (oldUser.email == userInfo.password) &&
+            (oldUser.password == userInfo.password) &&
+            (oldUser.age == userInfo.age)) {
+                res.status(400).render('login/user', {title: `Edit Profile`, warning: `At least one field must be different then the orginial data`, authenticated: true, user:req.session.user});
+                return;
+
+        }
         
         // update user
         try {
@@ -364,7 +370,7 @@ router.post('/edit/user/:id', async (req, res) => {
                 xss(req.body.bank).toLowerCase().trim(),
                 xss(req.body.email).toLowerCase().trim(),
                 xss(req.body.password).trim(),
-                parseFloat(req.body.age));
+                parseInt(xss(req.body.age)));
             const allAcct = await userData.getUserById(req.session.user._id)
             res.status(200).render('login/profile', {title: 'User Profile', user: updateUser, accts: allAcct, authenticated: true})
         } catch (e) {
@@ -400,8 +406,6 @@ router.get('/dashboard/:id', async (req, res) => {
             res.status(400).render('login/error',{title:'Error', error:'Account id cannot be an empty string', authenticated: true, user:req.session.user});
             return;
         }
-
-        // TODO do i need to try to mongodb objId check
 
         try {
             const account = await accountData.getAccount(req.params.id);
@@ -441,8 +445,6 @@ router.post('/dashboard/:acctId', async (req, res) => {
             res.status(400).render('login/error',{title:'Error', error:'Account id cannot be an empty string', authenticated: true, user:req.session.user});
             return;
         }
-
-        // TODO do i need to try to mongodb objId check
         
         let info = req.body; // schema {deposit or transaction: amount, tag: "food"}
         if (req.body.deposit) {
@@ -450,17 +452,14 @@ router.post('/dashboard/:acctId', async (req, res) => {
                 res.status(400).render('login/deposit', {title: `Make a deposit`, warning: `You must fill out all fields`, authenticated: true, user:req.session.user});
                 return;
             }
-            if(!info.deposit){
+            if(!info.deposit || parseFloat(info.deposit) < 0.01){
                 res.status(400).render('login/deposit', {title: `Make a deposit`, warning: `You must enter the amount of money to deposit`, authenticated: true, user:req.session.user});
                 return;
             }
-            if(!info.tag){
+            if(!info.tag || typeof info.tag != 'string'){
                 res.status(400).render('login/deposit', {title: `Make a deposit`, warning: `You must select a tag`, authenticated: true, user:req.session.user});
                 return;
             }
-        
-            // TODO check that the amount is num, >0, only up to 2 decimal places
-            // TODO error check inputs
         
             // add deposit
             try {
@@ -478,16 +477,14 @@ router.post('/dashboard/:acctId', async (req, res) => {
                 res.status(400).render('login/transaction', {title: `Make a transaction`, warning: `You must fill out all fields`,  authenticated: true, user:req.session.user});
                 return;
             }
-            if(!info.transaction){
+            if(!info.transaction || parseFloat(info.transaction) < 0.01){
                 res.status(400).render('login/transaction', {title: `Make a transaction`, warning: `You must enter the amount of money to transact`,  authenticated: true, user:req.session.user});
                 return;
             }
-            if(!info.tag){
+            if(!info.tag || typeof info.tag != 'string'){
                 res.status(400).render('login/transaction', {title: `Make a transaction`, warning: `You must select a tag`,  authenticated: true, user:req.session.user});
                 return;
             }
-        
-            // TODO check that the amount is num, >0, only up to 2 decimal places
         
             // add transaction
             try {
@@ -531,8 +528,6 @@ router.get('/deposit/:acctId', async (req, res) => {
             return;
         }
 
-        // TODO do i need to try to mongodb objId check
-
         try {
             res.status(200).render('login/deposit', {title:`Make a deposit`, accountId: req.params.acctId, authenticated: true, user:req.session.user})
         } catch (e) {
@@ -569,8 +564,6 @@ router.get('/transaction/:acctId', async (req, res) => {
             return;
         }
 
-        // TODO do i need to try to mongodb objId check
-
         try {
             res.status(200).render('login/transaction', {title:`Make a transaction`, accountId: req.params.acctId, authenticated: true, user:req.session.user})
         } catch (e) {
@@ -596,7 +589,6 @@ router.get('/edit/transaction/:transId', async (req, res) => {
             return;
         }
 
-        // TODO do i need to try to mongodb objId check
         let details = await transData.getDetails([req.params.transId])
         if (!details) {
             res.status(400).render('login/error', {title: 'Error', error: 'could not find any transaction with that id', authenticated: true, user: req.session.user});
@@ -632,7 +624,6 @@ router.get('/edit/deposit/:transId', async (req, res) => {
             return;
         }
 
-        // TODO do i need to try to mongodb objId check
         let details = await transData.getDetails([req.params.transId])
         if (!details) {
             res.status(400).render('login/error', {title: 'Error', error: 'could not find any transaction with that id', authenticated: true, user: req.session.user});
@@ -678,7 +669,6 @@ router.post('/edit/:transId', async (req, res) => {
             return;
         }
 
-        // TODO error checking more
         let details = await transData.getDetails([req.params.transId])
         if (!details) {
             res.status(400).render('login/error', {title: 'Error', error: 'could not find any transaction with that id', authenticated: true, user: req.session.user});
@@ -695,7 +685,7 @@ router.post('/edit/:transId', async (req, res) => {
                 res.status(400).render('login/edit', {title: `Edit a deposit`, warning: `You must fill out all fields`, type:"deposit", authenticated: true, user:req.session.user});
                 return;
             }
-            if(!info.deposit){
+            if(!info.deposit || parseFloat(info.deposit) < 0.01){
                 res.status(400).render('login/edit', {title: `Make a deposit`, warning: `You must enter the amount of money to deposit`, type:"deposit", authenticated: true, user:req.session.user});
                 return;
             }
@@ -708,11 +698,9 @@ router.post('/edit/:transId', async (req, res) => {
                 return;
             }
         
-            // TODO error checking of inputs
-        
             // edit deposit
             try {
-                const editDeposit = await transData.update(req.params.transId,"internal_deposit",xss(req.body.deposit), xss(req.body.tag), xss(req.body.date));
+                const editDeposit = await transData.update(req.params.transId,"internal_deposit",parseFloat(xss(req.body.deposit)).toFixed(2), xss(req.body.tag), xss(req.body.date));
                 const accountId = await accountData.getAccountByTransId(req.params.transId.toString())
                 const myAcct = await accountData.getAccount(accountId.toString());
                 const allTrans = await transData.getDetails(myAcct.transactions)
@@ -727,7 +715,7 @@ router.post('/edit/:transId', async (req, res) => {
                 res.status(400).render('login/edit', {title: `Edit a transaction`, warning: `You must fill out all fields`, type:"transaction", authenticated: true, user:req.session.user});
                 return;
             }
-            if(!info.transaction){
+            if(!info.transaction || parseFloat(info.transaction) < 0.01){
                 res.status(400).render('login/edit', {title: `Make a transaction`, warning: `You must enter the amount of money to transact`, type:"transaction", authenticated: true, user:req.session.user});
                 return;
             }
@@ -740,11 +728,9 @@ router.post('/edit/:transId', async (req, res) => {
                 return;
             }
         
-            // TODO error checking of inputs
-        
             // edit transaction
             try {
-                const editDeposit = await transData.update(req.params.transId,"external_transaction",xss(req.body.transaction), xss(req.body.tag), xss(req.body.date));
+                const editDeposit = await transData.update(req.params.transId,"external_transaction",parseFloat(xss(req.body.transaction)).toFixed(2), xss(req.body.tag), xss(req.body.date));
                 const accountId = await accountData.getAccountByTransId(req.params.transId.toString())
                 const myAcct = await accountData.getAccount(accountId.toString());
                 const allTrans = await transData.getDetails(myAcct.transactions)
@@ -774,7 +760,6 @@ router.get('/delete/deposit/:transId', async (req, res) => {
             return;
         }
 
-        // TODO do i need to try to mongodb objId check
         let details = await transData.getDetails([req.params.transId])
         if (!details) {
             res.status(400).render('login/error', {title: 'Error', error: 'could not find any transaction with that id', authenticated: true, user: req.session.user});
@@ -816,7 +801,6 @@ router.get('/delete/transaction/:transId', async (req, res) => {
             return;
         }
 
-        // TODO do i need to try to mongodb objId check
         let details = await transData.getDetails([req.params.transId])
         if (!details) {
             res.status(400).render('login/error', {title: 'Error', error: 'could not find any transaction with that id', authenticated: true, user: req.session.user});
@@ -856,7 +840,6 @@ router.get('/edit/transaction/:transId', async (req, res) => {
             return;
         }
 
-        // TODO do i need to try to mongodb objId check
         let details = await transData.getDetails([req.params.transId])
         if (!details) {
             res.status(400).render('login/error', {title: 'Error', error: 'could not find any transaction with that id', authenticated: true, user: req.session.user});

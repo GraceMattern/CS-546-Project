@@ -5,11 +5,13 @@
     <form id="account-form" method="post" action="/profile">
         <div class="form-group">
           <p>Select the account type</p>
-          <input type="radio" name="accountType" id="savings" value="savings" checked>
-          <label for="savings">Savings</label><br>
-          <input type="radio" name="accountType" id="checkings" value="checkings">
-          <label for="checkings">Checkings</label><br>
-          <input type="radio" name="accountType" id="joint" value="joint">
+          {{#ifGLE user.age 18}}
+            <input type="radio" name="accountType" id="savings" value="savings">
+            <label for="savings">Savings</label><br>
+            <input type="radio" name="accountType" id="checkings" value="checkings">
+            <label for="checkings">Checkings</label><br>
+          {{/ifGLE}}
+          <input type="radio" name="accountType" id="joint" value="joint" checked>
           <label for="joint">Joint</label><br>
           <button type="submit" id="acctSubmit" class="btn btn-dark">Add account</button>
         </div>

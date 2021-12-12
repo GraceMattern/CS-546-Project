@@ -23,6 +23,10 @@ hbs.handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
     return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
 });
 
+hbs.handlebars.registerHelper('ifGLE', function(arg1, arg2, options) {
+    return (parseInt(arg1) >= parseInt(arg2)) ? options.fn(this) : options.inverse(this);
+});
+
 app.use(cookieParser());
 
 app.use(express.json());

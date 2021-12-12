@@ -1,4 +1,4 @@
-<div id="body-box"></div>
+<div id="body-box">
   <div class="container">
     <h1>{{title}}</h1>
     <form id="signup-form" method="post" action="/signup">
@@ -27,21 +27,21 @@
           <label for="email">Email</label>
           <input type="email" class="form-control" placeholder="Enter email" name="email" id="email">
           <div class="invalid-feedback">
-              Email address cannot be empty
+              Must provide a valid email address where the domain is your bank provider
           </div>
       </div>
       <div class="form-group">
           <label for="password">Password</label>
           <input type="text" class="form-control" placeholder="Enter password" name="password" id="password">
           <div class="invalid-feedback">
-              Password cannot be empty
+              Password must be at least six characters long
           </div>
       </div>
       <div class="form-group">
         <label for="age">Age</label>
-        <input type="number" class="form-control" placeholder="Enter your age" name="age" id="age">
+        <input type="number" class="form-control" placeholder="Enter your age" name="age" id="age" min="0" step="1">
         <div class="invalid-feedback">
-            Age cannot be empty
+            Age must be a positive integer
         </div>
       </div>
       <button type="submit" id="submit" class="btn btn-dark">Sign Up</button>
@@ -55,4 +55,3 @@
 </div>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="/public/js/signup.js"></script>
-

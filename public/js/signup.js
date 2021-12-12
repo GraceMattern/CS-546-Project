@@ -29,7 +29,7 @@
         emailInput.removeClass('is-invalid is-valid');
         ageInput.removeClass('is-invalid is-valid');
 
-        submitButton.prop('disabled', true);
+        // submitButton.prop('disabled', true);
         let info = {
             firstName: firstNameInput.val().trim(),
             lastName: lastNameInput.val().trim(),
@@ -44,9 +44,10 @@
         if (!validString(info.bank)) bankInput.addClass('is-invalid');
         if (!validString(info.email)) emailInput.addClass('is-invalid');
         if (!validString(info.password)) passwordInput.addClass('is-invalid');
+        if (!validString(info.age)) ageInput.addClass('is-invalid');
         
         if(!info.age) ageInput.addClass('is-invalid'); 
-        if(parseInt(info.age) < 18) ageInput.addClass('is-invalid'); 
+        // if(parseInt(info.age) < 18) ageInput.addClass('is-invalid'); 
         
         if (info.email.trim() != info.email.trim().replace(/\s+/g, "")) 
             emailInput.addClass('is-invalid'); 
@@ -56,16 +57,15 @@
             emailInput.addClass('is-invalid'); 
 
 
-        // if (info.password.trim().length == 0) passwordInput.addClass('is-invalid'); // ! this may be breaking it
         if (info.password.trim() != info.password.trim().replace(/\s+/g, ""))
             passwordInput.addClass('is-invalid');
         let strippedStr = info.password.trim().replace(/\s+/g, "");
         if (strippedStr.length < 6) passwordInput.addClass('is-invalid');
         
         if (!hasErrors) { 
-        // if (!hasErrors && info.password.trim().length >5 && parseInt(info.age) > 17) {
             signupForm.unbind().submit();
-        } else {
+        } 
+        else {
             submitButton.prop('disabled', false);
         }
     });

@@ -10,8 +10,8 @@
 
     let depositEditForm =$('#edit-deposit-form');
     let depositInput = $('#deposit');
-    let depositDateInput = $('#deposit-date')
-    let depositTagInput = $('#deposit-tag');
+    let depositDateInput = $('#date')
+    let depositTagInput = $('#tag');
     let depositSubmitButton = $('#depositSubmit');
 
     depositEditForm.submit((event) => {
@@ -58,7 +58,7 @@
         } 
         
         if(info.amount[1]==undefined) {
-            depositInput.addClass('is-invalid');
+            // depositInput.addClass('is-invalid');
             hasErrors = true;
             depositSubmitButton.prop('disabled', false);
         }
@@ -69,8 +69,8 @@
 
     let transEditForm =$('#edit-trans-form');
     let transInput = $('#transaction');
-    let transDateInput = $('#trans-date')
-    let transTagInput = $('#trans-tag');
+    let transDateInput = $('#date')
+    let transTagInput = $('#tag');
     let transSubmitButton = $('#transSubmit');
 
     transEditForm.submit((event) => {
@@ -113,7 +113,7 @@
             transEditForm.unbind().submit();
         } 
         if(info.amount[1]==undefined) {
-            transInput.addClass('is-invalid');
+            // transInput.addClass('is-invalid');
             hasErrors = true;
             depositSubmitButton.prop('disabled', false);
         }

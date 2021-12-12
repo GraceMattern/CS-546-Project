@@ -49,6 +49,9 @@ password: acb123
 18. Logout
 
 ## Extra Features
+1. Joint account (allow people under 18 to have accounts)
+2. Filter by tag
+3. Export as PDF 
 
 ## Github repo
 https://github.com/GraceMattern/CS-546-Project

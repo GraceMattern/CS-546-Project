@@ -46,7 +46,7 @@
         if (!validString(info.password)) passwordInput.addClass('is-invalid');
         
         if(!info.age) ageInput.addClass('is-invalid'); 
-        if(parseInt(info.age) < 18) ageInput.addClass('is-invalid'); 
+        // if(parseInt(info.age) < 18) ageInput.addClass('is-invalid'); 
         
         if (info.email.trim() != info.email.trim().replace(/\s+/g, "")) 
             emailInput.addClass('is-invalid'); 

@@ -1,4 +1,4 @@
-<div id="body-box"></div>
+<div id="body-box">
   <div class="container">
     <h1>{{title}}</h1>
     <form id="edit-profile-form" method="post" action="/edit/user/{{userId}}">
@@ -34,14 +34,14 @@
           <label for="password">Password</label>
           <input type="text" class="form-control" placeholder="Enter password" name="password" id="password">
           <div class="invalid-feedback">
-              Email must be at least six characters in length
+              Password must be at least six characters in length
           </div>
       </div>
       <div class="form-group">
         <label for="age">Age</label>
-        <input type="number" class="form-control" placeholder="Enter your age" name="age" id="age">
+        <input type="number" class="form-control" placeholder="Enter your age" name="age" id="age" min="0" step="1">
         <div class="invalid-feedback">
-            Must be 18 years or older
+            Age must be a positive integer
         </div>
       </div>
       <button type="submit" class="btn btn-dark">Save Changes</button>
