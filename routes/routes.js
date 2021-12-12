@@ -841,7 +841,6 @@ router.get('/delete/transaction/:transId', async (req, res) => {
     }
 });
 
-
 router.get('/edit/transaction/:transId', async (req, res) => {
     if(req.session.user){
         if(!req.params.transId) {
